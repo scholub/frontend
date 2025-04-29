@@ -8,5 +8,7 @@ export function meta() {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return <div>
+    하이
+  </div>;
 }

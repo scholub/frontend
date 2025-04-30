@@ -1,5 +1,3 @@
-import { Welcome } from "../welcome/welcome";
-
 export function meta() {
   return [
     { title: "New React Router App" },

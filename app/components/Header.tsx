@@ -38,7 +38,7 @@ export default function Header() {
 
 const HeaderContainer = styled.div`
     display: flex;
-    width: 100dvw;
+    width: 100%;
     max-width: 1200px;
     flex-direction: column;
     justify-content: center;

@@ -6,11 +6,6 @@ const ColFlex = styled.div`
   flex-direction: column;
 `
 
-const Container = styled(ColFlex)`
-  width: 100vw;
-  height: 100vh;
-`
-
 const CenterFlex = styled(ColFlex)`
   width: 100%;
   height: 100%;
@@ -26,13 +21,13 @@ export function meta() {
 
 export default function Login() {
   return (
-    <Container>
+    <>
       <Header />
       <CenterFlex>
         <h1>로그인</h1>
         <h2>로그인하여 Scholub 커뮤니티를 이용하세요!</h2>
       </CenterFlex>
-    </Container>
+    </>
   );
 }
 

@@ -5,6 +5,9 @@ import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
   plugins: [reactRouter(), tsconfigPaths(), svgr()],
+  optimizeDeps: {
+    include: ["styled-components"],
+  },
   ssr: {
     noExternal: ['styled-components'],
   },

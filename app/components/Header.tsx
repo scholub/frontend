@@ -1,8 +1,7 @@
-import React from 'react';
 import styled from "styled-components";
-import LogoSvg from "../asset/icon/logo.svg?react";
-import SearchSvg from "../asset/icon/search.svg?react";
-import MenuLineSvg from "../asset/icon/menuLine.svg?react";
+import LogoSvg from "../asset/icon/logo.svg";
+import SearchSvg from "../asset/icon/search.svg";
+import MenuLineSvg from "../asset/icon/menuLine.svg";
 
 export default function Header() {
     return (

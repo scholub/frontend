@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'NanumSquareRound';
+  font-family: 'NanumSquareRoundR';
   /*src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');*/
   src: url('asset/font/NanumSquareRoundR.woff2') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
-* { font-family: "NanumSquareRoundL"; }
+* { font-family: "NanumSquareRoundR"; }
 
 body {
   display: flex;

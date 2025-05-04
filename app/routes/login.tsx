@@ -4,10 +4,15 @@ import Header from "~/components/Header"
 import { serverAddress } from "../consts/backend";
 
 export default function Login() {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   async function login() {
+    if (!emailRegex.test(email)) {
+      alert("이메일 형식이 잘못되었습니다.");
+      return;
+    }
     const res = await fetch(serverAddress + "/user/login", {
       method: "POST",
         headers: {

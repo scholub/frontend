@@ -9,6 +9,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   async function login() {
+    if (email === "" || password === "") {
+      alert("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+    if (password.length < 8) {
+      alert("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
     if (!emailRegex.test(email)) {
       alert("이메일 형식이 잘못되었습니다.");
       return;

@@ -43,7 +43,7 @@ export default function Login() {
             <Description>로그인하여 Scholub 커뮤니티를 이용하세요!</Description>
           </CenterFlex>
           <Container gap={30}>
-            <TextInput type="text" placeholder="이메일" value={email} onChange={(t)=>setEmail(t.target.value)} />
+            <TextInput type="email" placeholder="이메일" value={email} onChange={(t)=>setEmail(t.target.value)} />
             <TextInput type="password" placeholder="비밀번호" value={password} onChange={(t)=>setPassword(t.target.value)} />
             <BetweenFlex direction="row">
               <CenterFlex direction="row" gap={4} width={"fit-content"}>

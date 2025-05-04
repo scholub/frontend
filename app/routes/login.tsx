@@ -1,7 +1,38 @@
+import { useState } from "react";
 import { styled } from "styled-components"
 import Header from "~/components/Header"
+import { serverAddress } from "../consts/backend";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  async function login() {
+    const res = await fetch(serverAddress + "/user/login", {
+      method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
+    if (res.status === 200) {
+      const data = await res.text();
+      if (remember) {
+        localStorage.setItem("token", data);
+      } else {
+        sessionStorage.setItem("token", data);
+      }
+    } else if (res.status === 401) {
+      alert("이메일 또는 비밀번호가 잘못되었습니다.");
+    } else if (res.status === 422) {
+      alert("이메일이 형식에 맞지 않습니다.");
+    } else {
+      alert("알 수 없는 오류가 발생했습니다.");
+    }
+  }
   return (
     <Screen>
       <Header />
@@ -12,17 +43,17 @@ export default function Login() {
             <Description>로그인하여 Scholub 커뮤니티를 이용하세요!</Description>
           </CenterFlex>
           <Container gap={30}>
-            <TextInput type="text" placeholder="이메일" />
-            <TextInput type="password" placeholder="비밀번호" />
+            <TextInput type="text" placeholder="이메일" value={email} onChange={(t)=>setEmail(t.target.value)} />
+            <TextInput type="password" placeholder="비밀번호" value={password} onChange={(t)=>setPassword(t.target.value)} />
             <BetweenFlex direction="row">
               <CenterFlex direction="row" gap={4} width={"fit-content"}>
-                <CheckBox type="checkbox" />
+                <CheckBox type="checkbox" checked={remember} onChange={(t)=>setRemember(t.target.checked)} />
                 <Text>로그인 유지</Text>
               </CenterFlex>
               <Text>계정 찾기</Text>
             </BetweenFlex>
           </Container>
-          <Submit type="submit" value="로그인" />
+          <Submit onClick={login}><Text>로그인</Text></Submit>
         </CenterFlex>
       </CenterFlex>
     </Screen>
@@ -117,7 +148,7 @@ const CheckBox = styled(Input)`
   margin-right: 4px;
 `
 
-const Submit = styled.input`
+const Submit = styled.button`
   height: 42px;
   padding: 10px;
   align-self: stretch;

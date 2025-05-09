@@ -37,14 +37,15 @@ export default function Header() {
 };
 
 const HeaderContainer = styled.div`
-    display: flex;
-    width: 100%;
-    max-width: 1200px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-bottom: black solid 1px;
-    border-bottom-color: #DDDDDD;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: black solid 1px;
+  border-bottom-color: #DDDDDD;
+  margin-top: 20px;
 `
 const SearchBarContainer = styled.div`
     display: flex;
@@ -77,7 +78,7 @@ const SearchBarInput = styled.input`
     &::placeholder{
         color: rgba(50, 47, 41, 0.30);
     }
-    
+
     display: flex;
     width: 100%;
     align-items: center;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Header from "~/components/Header";
 import Banner from "~/components/Banner";
-import Article, {type ArticleProps} from "~/components/Article";
+import ArticleList, {type ArticleProps} from "~/components/ArticleList";
 
 export function meta() {
   return [
@@ -50,7 +50,7 @@ export default function Home() {
     <Banner/>
     <ArticleBoardContainer>
       {articles.map((article, i) => (
-        <Article title={article.title} subTitle={article.subTitle} imgUrl={article.imgUrl} category={article.category}/>
+        <ArticleList title={article.title} subTitle={article.subTitle} imgUrl={article.imgUrl} category={article.category}/>
       ))}
     </ArticleBoardContainer>
   </Screen>;

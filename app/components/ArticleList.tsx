@@ -7,7 +7,7 @@ export interface ArticleProps {
   category: string;
 }
 
-export default function Article(props: ArticleProps) {
+export default function ArticleList(props: ArticleProps) {
   return (
     <ArticleContainer>
       <ArticleImg/>
@@ -35,7 +35,6 @@ const ArticleImg = styled.img`
 const ArticleTitle = styled.span`
   align-self: stretch;
   color: #322F29;
-  font-family: NanumSquareRound;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -47,7 +46,6 @@ const ArticleSubTitle = styled.span`
   color: #322F29;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: NanumSquareRound;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -57,7 +55,6 @@ const ArticleSubTitle = styled.span`
 const ArticleCategory = styled.span`
   color: #F7971D;
   text-align: center;
-  font-family: NanumSquareRound;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

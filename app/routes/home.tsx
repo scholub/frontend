@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Header from "~/components/Header";
-import Banner from "~/components/Banner";
+import RowBanner from "~/components/RowBanner";
 import ArticleUnit, {type ArticleListProps} from "~/components/ArticleUnit";
 
 export function meta() {
@@ -47,7 +47,7 @@ export default function Home() {
 
   return <Screen>
     <Header/>
-    <Banner/>
+    <RowBanner/>
     <ArticleBoardContainer>
       {articles.map((article, i) => (
         <ArticleUnit title={article.title} subTitle={article.subTitle} imgUrl={article.imgUrl} category={article.category}/>

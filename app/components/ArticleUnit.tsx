@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-export interface ArticleProps {
+export interface ArticleListProps {
   title: string;
   subTitle: string;
   imgUrl: string;
   category: string;
 }
 
-export default function ArticleList(props: ArticleProps) {
+export default function ArticleUnit(props: ArticleListProps) {
   return (
     <ArticleContainer>
       <ArticleImg/>

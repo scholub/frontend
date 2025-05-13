@@ -2,7 +2,7 @@ import styled from "styled-components";
 import img from "../asset/img/bannerImg.png"
 
 
-export default function Banner(){
+export default function RowBanner(){
   return (
     <BannerContainer>
       <img src={img} alt={'배너 이미지'} />

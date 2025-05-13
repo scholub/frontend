@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Header from "~/components/Header";
 import Banner from "~/components/Banner";
-import ArticleList, {type ArticleProps} from "~/components/ArticleList";
+import ArticleUnit, {type ArticleListProps} from "~/components/ArticleUnit";
 
 export function meta() {
   return [
@@ -11,7 +11,7 @@ export function meta() {
 }
 
 export default function Home() {
-  const articles: ArticleProps[] = [
+  const articles: ArticleListProps[] = [
     {
       title: "AI 요약 기술의 현재",
       subTitle: "대규모 언어 모델 기반 논문 요약",
@@ -50,7 +50,7 @@ export default function Home() {
     <Banner/>
     <ArticleBoardContainer>
       {articles.map((article, i) => (
-        <ArticleList title={article.title} subTitle={article.subTitle} imgUrl={article.imgUrl} category={article.category}/>
+        <ArticleUnit title={article.title} subTitle={article.subTitle} imgUrl={article.imgUrl} category={article.category}/>
       ))}
     </ArticleBoardContainer>
   </Screen>;

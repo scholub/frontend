@@ -6,10 +6,11 @@ interface ArticleMarkdownProps {
 }
 
 export default function ArticleMarkdown(ArticleMarkdownProps: ArticleMarkdownProps) {
+  const parsedMarkdown = ArticleMarkdownProps.content.replace(/\\n/g, "\n");
 
   return (
     <Wrapper>
-      <ReactMarkdown>{ArticleMarkdownProps.content}</ReactMarkdown>
+      <ReactMarkdown>{parsedMarkdown}</ReactMarkdown>
     </Wrapper>
   );
 }
@@ -20,35 +21,6 @@ const Wrapper = styled.div`
   max-width: 700px;
   flex-direction: column;
   gap: 40px;
-  background-color: #f1f1f1;
-  align-items: center;
+  align-items: start;
 
-  h1, h2, h3 {
-    margin-top: 1.2em;
-  }
-
-  p {
-    margin: 0.5em 0;
-    line-height: 1.6;
-  }
-
-  ul {
-    margin-left: 1.5em;
-  }
-
-  blockquote {
-    border-left: 4px solid #ccc;
-    padding-left: 1em;
-    color: #666;
-    font-style: italic;
-  }
-
-  a {
-    color: #0070f3;
-    text-decoration: underline;
-  }
-
-  img{
-
-  }
 `;

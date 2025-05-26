@@ -1,12 +1,20 @@
 import styled from "styled-components";
 import ArticleMarkdown from "~/components/ArticleMarkdown";
-import React from "react";
+import React, {useEffect, useState, useRef} from "react";
 import ColBanner from "~/components/ColBanner";
 import Header from "~/components/Header";
 import GoodSvg from '~/asset/icon/good.svg?react'
 import BadSvg from '~/asset/icon/bad.svg?react'
 import ShareSvg from '~/asset/icon/share.svg?react'
 import BookmarkSvg from '~/asset/icon/bookmark.svg?react'
+import CommentItem from "~/components/CommentItem";
+
+function formatDate(date: Date) {
+  return date.toLocaleString("ko-KR", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
 
 interface ArticleProps {
   title: string;
@@ -16,21 +24,131 @@ interface ArticleProps {
   markdownContent: string;
 }
 
-function formatDate(date: Date) {
-  return date.toLocaleString("ko-KR", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
+export default function Article() {
+  // 좋아요, 싫어요 상태
+  const [good, setGood] = useState(false);
+  const [goodValue, setGoodValue] = useState(0);
+  const [bad, setBad] = useState(false);
+  const [badValue, setBadValue] = useState(0);
+  const [bookmark, setBookmark] = useState(false);
+  // 댓글 리스트 상태 관리
+  const [comments, setComments] = useState<{
+    id: number;
+    profile: string;
+    name: string;
+    time: string;
+    content: string;
+    email: string;
+    currentEmail: string;
+  }[] | null>(null);
 
-export default function Article(props: ArticleProps) {
-  const exampleArticle: ArticleProps = {
-    title: "DeepSeek-R1: 순수 RL 기반 대형 언어모델의 추론 능력 향상",
-    initialTime: new Date('2024-05-12T09:00:00Z'),
-    fixedTime: new Date("2024-05-13T14:30:00Z"),
-    category: "AI Research",
-    markdownContent: "### 도입\\n최신 대형 언어모델(LLM)은 **추론 능력** 강화를 위한 다양한 기법이 제안되어 왔지만, 대부분은 방대한 지도학습 데이터에 의존합니다. DeepSeek 연구팀은 arXiv에 올린 논문 **‘DeepSeek-R1’**을 통해, 지도학습 없이도 순수 **강화학습(RL)** 만으로 고급 추론 행동이 자연스럽게 등장함을 보였습니다. 더 나아가 **Cold-Start 데이터**와 **다단계 학습 파이프라인**을 도입해 가독성과 성능을 동시에 잡은 점이 주목됩니다.\\n\\n![image](IMAGE_PLACEHOLDER_URL_1)\\n\\n### 기술 설명\\nDeepSeek-R1은 두 가지 핵심 단계로 구성됩니다. 우선 **DeepSeek-R1-Zero** 단계에서 완전한 RL만으로 기본 모델을 훈련해, **Chain-of-Thought(CoT)** 기반 추론 패턴을 스스로 학습합니다. 이후 **Cold-Start SFT**로 수천 개의 고품질 CoT 예시를 이용해 초기 모델을 미세조정한 뒤, 다시 **추론 지향 RL**과 **Rejection Sampling + SFT**, 그리고 **모든 시나리오를 아우르는 RL**을 순차적으로 수행합니다.\\n\\n- Cold-Start 데이터 수집 및 SFT 미세조정\\n- 추론 지향 대규모 강화학습\\n- Rejection Sampling 기반 SFT 재학습\\n- 일반․추론 시나리오 통합 RL\\n\\n![image](IMAGE_PLACEHOLDER_URL_2)\\n\\n### 세부 기술·실험 결과\\nDeepSeek-R1-Zero는 AIME 2024 벤치마크에서 **초기 15.6% → 71.0%** pass@1으로 비약적 성능 향상을 보였으며, 다수결 투표 시 **86.7%**로 OpenAI-o1-0912를 뛰어넘었습니다. 최종 모델 DeepSeek-R1은 AIME 2024에서 **79.8%**, MATH-500에서 **97.3%**, Codeforces 상위 **96.3%** 등 주요 수학·코딩·지식 벤치마크에서 OpenAI-o1-1217와 유사한 성능을 달성했습니다. MMLU, GPQA Diamond 등 지식형 평가에서도 평균 **90%** 이상의 결과를 보여, 범용적 강화를 입증했습니다.\\n\\n![image](IMAGE_PLACEHOLDER_URL_3)\\n\\n### 소형 모델 증류\\nDeepSeek-R1의 추론 데이터를 활용해 Qwen·Llama 계열 1.5B부터 70B까지 **6개 크기 모델**을 증류했습니다. 증류된 14B 모델은 AIME에서 **69.7%**, MATH-500에서 **93.9%**를 기록해 기존 공개 소형 모델을 모두 압도했습니다. 특히 32B 모델은 **72.6%** AIME pass@1으로 o1-mini에 육박하는 성능을 보였고, 증류만으로도 소형 모델의 추론 능력을 크게 끌어올릴 수 있음을 확인했습니다.\\n\\n- DeepSeek-R1-Distill-Qwen-7B: AIME 55.5%, MATH-500 92.8%\\n- DeepSeek-R1-Distill-Qwen-14B: AIME 69.7%, MATH-500 93.9%\\n- DeepSeek-R1-Distill-Qwen-32B: AIME 72.6%, MATH-500 94.3%\\n\\n![image](IMAGE_PLACEHOLDER_URL_4)\\n\\n### 기술적 의의 및 전망\\n이 논문은 **순수 RL**만으로 LLM 추론 능력을 확보할 수 있음을 처음으로 검증했으며, **Cold-Start+다단계 학습** 파이프라인의 실용적 가이드라인을 제시했습니다. 또한 강력한 소형 증류 모델을 공개해 연구·산업계 확산을 꾀합니다. 앞으로는 다국어 혼합 현상 해결, 함수 호출·멀티턴·JSON 출력 등 **일반화 능력** 강화, 소프트웨어 엔지니어링 벤치마크 대규모 RL 적용 등이 기대됩니다.\\n\\n![image](IMAGE_PLACEHOLDER_URL_5)",
-  };
+  const [articleData, setArticleData] = useState<ArticleProps>({
+      title: "DeepSeek-R1: 순수 RL 기반 대형 언어모델의 추론 능력 향상",
+      initialTime: new Date('2024-05-12T09:00:00Z'),
+      fixedTime: new Date("2024-05-13T14:30:00Z"),
+      category: "AI Research",
+      markdownContent: "# 📚 Scholub: 지식의 허브를 향하여\n" +
+        "---\n" +
+        "## 개요\n" +
+        "**Scholub**는 \"Scholar\"와 \"Hub\"의 합성어로, 최신 논문을 뉴스 형태로 가공하여 사용자들이 지식을 공유하고 토론할 수 있는 커뮤니티 플랫폼입니다. > *\"연구자의 연구가 대중의 대화로 이어지길 바라며.\"*\n" +
+        "---\n" +
+        "## 주요 기능 🔍\n" +
+        "1. **논문 요약 및 뉴스화**  AI가 최신 논문을 자동 요약하고, 뉴스처럼 가공해 제공합니다.\n" +
+        "2. **커뮤니티 토론**  뉴스 형태의 게시물에 댓글과 좋아요 기능으로 활발한 토론을 유도합니다.\n" +
+        "3. **맞춤형 추천**  사용자의 관심사에 따라 논문과 뉴스 피드를 개인화합니다.\n" +
+        "---\n" +
+        "### 기술 스택 💻\n" +
+        "- **Frontend**: React, PWA  \n" +
+        "- **Backend**: FastAPI, MongoDB  \n" +
+        "- **AI 기술**: LLM, 자연어 처리  \n" +
+        "- **UX/UI**: 카테고리별 뉴스 게시판, 채팅 인터페이스  \n" +
+        "---\n" +
+        "### 개발 일정 🗓️\n" +
+        "| 월 | 주차 | 주요 작업 |\n" +
+        "|---|---|---|\n" +
+        "| 4월 | 1~2주차 | 기획서 작성 |\n" +
+        "| 4월 | 3~4주차 | 디자인 |\n" +
+        "| 5월 | 1~4주차 | 프론트엔드/백엔드 개발 |\n" +
+        "| 6월 | 1~4주차 | 테스트 및 버그 수정 |\n" +
+        "| 7월 | - | 부가 기능 개발 |\n" +
+        "---\n" +
+        "### 팀원 역할 👥\n" +
+        "- **박찬규**: 백엔드 (API, DB 관리, 크롤러 제작)  \n" +
+        "- **설지원**: 프론트엔드 (뉴스 피드, 댓글 기능, 랜딩 페이지)  \n" +
+        "- **유채호**: AI (논문 요약, 딥리서치, LLM 챗봇)  \n" +
+        "---\n" +
+        "### 특장점 🌟\n" +
+        "- [ ] 빠른 논문 탐색과 요약\n" +
+        "- [ ] 커뮤니티 기반 토론\n" +
+        "- [ ] 사용자 친화적 인터페이스\n" +
+        "- [ ] AI 기반 개인화 뉴스\n" +
+        "---\n" +
+        "## 참고 이미지  \n" +
+        "![Scholub Concept](https://i.namu.wiki/i/6OwDAUYGGTGzVc0dXzTQ8qEk4qoHf___fOy4XGH5ksiDkCsv1x4XldPjmKwsuIRDy9adqD9QOj0jJqHpTPsiIg.webp)\n" +
+        "---\n" +
+        "### 코드 예시 👨‍💻\n" +
+        "```python\n" +
+        "from fastapi import FastAPI\n" +
+        "app = FastAPI()\n" +
+        "@app.get(\"/news\")\n" +
+        "async def get_news():\n" +
+        "    return {\"message\": \"최신 논문 뉴스 피드\"}\n" +
+        "```\n" +
+        "---\n" +
+        "### 인용구 📜\n" +
+        "> \"지식을 나누는 일은 세상을 바꾸는 첫걸음이다.\" - 알베르트 아인슈타인\n" +
+        "---\n" +
+        "### 링크 🔗\n" +
+        "- 공식 홈페이지: [Scholub](https://scholub.com)\n" +
+        "- 연락처: [이메일](mailto:contact@scholub.com)\n" +
+        "---\n" +
+        "### 참고 자료 📑\n" +
+        "- ~~논문 전체 열람이 필요하다면 arXiv 사용을 권장드립니다.~~  \n" +
+        "- 기존 플랫폼과의 차별화 포인트를 꼭 참고하세요!\n",
+    });
+
+  // 댓글 비동기 로딩 처리
+  const commentRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let loaded = false;
+    const observer = new window.IntersectionObserver((entries) => {
+      if (!loaded && entries[0].isIntersecting) {
+        setComments([
+          // TODO: 받아온 댓글 넣기
+          { id: 1, profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s', name: '유이', time: '1시간 전', content: '와웅', email: 'hong@example.com', currentEmail: 'hong@example.com' },
+          { id: 2, profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREGFq17Q8ajbYOPZszUsWuTEKO1MyTIKiirQ&s', name: '프리렌', time: '2시간 전', content: '힘멜이라면 분명 그렇게 말했을거야.', email: 'kim@example.com', currentEmail: 'current@example.com' },
+        ]);
+        loaded = true;
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    if (commentRef.current) observer.observe(commentRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (good) {
+      setGoodValue(prev => prev + 1);
+      if (bad) {
+        setBad(false);
+        setBadValue(prev => Math.max(0, prev - 1));
+      }
+    } else {
+      setGoodValue(prev => Math.max(0, prev - 1));
+    }
+  }, [good]);
+
+  useEffect(() => {
+    if (bad) {
+      setBadValue(prev => prev + 1);
+      if (good) {
+        setGood(false);
+        setGoodValue(prev => Math.max(0, prev - 1));
+      }
+    } else {
+      setBadValue(prev => Math.max(0, prev - 1));
+    }
+  }, [bad]);
 
   return (
     <Screen>
@@ -38,43 +156,45 @@ export default function Article(props: ArticleProps) {
       <Wrapper>
         <ArticleBox>
           <ArticleTitleBox>
-            {/*<Category>{props.cartegory}</Category>*/}
-            {/*<Title>{props.title}</Title>*/}
-            {/*<DateBox>*/}
-            {/*  <DateView>{props.initialTime}</DateView>*/}
-            {/*  <DateView>{props.fixedTime}</DateView>*/}
-            <Category>{exampleArticle.category}</Category>
-            <Title>{exampleArticle.title}</Title>
+            <Category>{articleData.category}</Category>
+            <Title>{articleData.title}</Title>
             <DateBox>
-              <DateView>{formatDate(exampleArticle.initialTime)}</DateView>
-              <DateView>{formatDate(exampleArticle.fixedTime)}</DateView>
+              <DateView>{formatDate(articleData.initialTime)}</DateView>
+              <DateView>{formatDate(articleData.fixedTime)}</DateView>
             </DateBox>
             <Editor>AI 뉴스 에디터 작성</Editor>
           </ArticleTitleBox>
           <Line/>
           <ContentContainer>
-            {/*<ArticleMarkdown content={props.markdownContent} />*/}
             {/*TODO: 마크다운 형식, 코드박스 디자인*/}
-            <ArticleMarkdown content={exampleArticle.markdownContent} />
+            <ArticleMarkdown content={articleData.markdownContent} />
           </ContentContainer>
           <Line/>
           <FeedbackBox>
             <ButtonContainer>
               <FeedbackButtonBox>
                 <FeedbackTitle>쪼아요</FeedbackTitle>
-                <GoodButton $fill={'#F7971D'}/>
-                <FeedbackValue>1234567890</FeedbackValue>
+                <GoodButton $fill={good ? '#F7971D' : '#D9D9D9'} onClick={() => setGood(!good)}/>
+                <FeedbackValue>{goodValue}</FeedbackValue>
               </FeedbackButtonBox>
               <FeedbackButtonBox>
                 <FeedbackTitle>시러요</FeedbackTitle>
-                <BadButton $fill={'#F7971D'}/>
-                <FeedbackValue>576348</FeedbackValue>
+                <BadButton $fill={bad ? '#F7971D' : '#D9D9D9'} onClick={() => setBad(!bad)}/>
+                <FeedbackValue>{badValue}</FeedbackValue>
               </FeedbackButtonBox>
             </ButtonContainer>
           </FeedbackBox>
           <ActionBox>
             <SendButton><ShareSvg/>공유하기</SendButton>
-            <BookmarkButton $fill={'#F7971D'} $textColor={'#fff'}><Bookmark $fill={'#fff'}/>북마크</BookmarkButton>
+            <BookmarkButton
+              $fill={bookmark ? '#F7971D1A' : '#8D8D8D1A'}
+              $textColor={bookmark ? '#F7971D' : '#7E7E7E'}
+              onClick={() => setBookmark(!bookmark)}
+              style={{ cursor: "pointer" }}
+            >
+              <Bookmark $fill={bookmark ? '#F7971D' : '#7E7E7E'} />
+              북마크
+            </BookmarkButton>
           </ActionBox>
           <Line/>
           <CommentBox>
@@ -82,8 +202,22 @@ export default function Article(props: ArticleProps) {
             <CommentInput placeholder={"댓글을 남겨주세요!"}/>
             <CommentAddButton>등록</CommentAddButton>
           </CommentBox>
-          <CommentLogBox>
-
+          <CommentLogBox ref={commentRef}>
+            {comments ? (
+              comments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  profile={comment.profile}
+                  name={comment.name}
+                  time={comment.time}
+                  content={comment.content}
+                  currentUserEmail={comment.currentEmail}
+                  email={comment.email}
+                />
+              ))
+            ) : (
+              <p>댓글을 불러오는 중...</p>
+            )}
           </CommentLogBox>
         </ArticleBox>
         <ColBanner/>
@@ -312,17 +446,3 @@ const CommentLogBox = styled.div`
   gap: 24px;
   align-self: stretch;
 `
-const CommentContentBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 6px;
-  flex: 1 0 0;
-`
-const NameBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-`
-

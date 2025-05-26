@@ -69,12 +69,12 @@ const SearchBar = styled.div`
 const SearchBarInput = styled.input`
     color: #000;
     text-align: start;
-    font-family: NanumSquareRound;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
     letter-spacing: -0.14px;
+    outline: none;
     &::placeholder{
         color: rgba(50, 47, 41, 0.30);
     }
@@ -117,7 +117,6 @@ const MenuMain = styled.a`
     text-decoration: none;
     color: #322F29;
     text-align: center;
-    font-family: NanumSquareRound;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
@@ -128,7 +127,6 @@ const MenuSub = styled.a`
     text-decoration: none;
     color: rgba(50, 47, 41, 0.80);
     text-align: center;
-    font-family: NanumSquareRound;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -145,7 +143,6 @@ const LoginButton = styled.a`
     text-decoration: none;
     color: #322F29;
     text-align: center;
-    font-family: NanumSquareRound;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -156,7 +153,6 @@ const SignInButton = styled.a`
     text-decoration: none;
     color: #322F29;
     text-align: center;
-    font-family: NanumSquareRound;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;

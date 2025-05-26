@@ -65,3 +65,6 @@ dist
 
 # React Router
 .react-router/
+
+# MacOS
+.DS_Store

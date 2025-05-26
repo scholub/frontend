@@ -54,6 +54,21 @@ export default function Article(props: ArticleProps) {
             <ArticleMarkdown content={exampleArticle.markdownContent} />
           </ContentContainer>
           <Line/>
+          <FeedbackBox>
+            <ButtonContainer>
+              <FeedbackButton>
+                <FeedbackTitle>쪼아요</FeedbackTitle>
+
+                <FeedbackValue>1234567890</FeedbackValue>
+              </FeedbackButton>
+              <FeedbackButton>
+                <FeedbackTitle>시러요</FeedbackTitle>
+
+                <FeedbackValue>576348</FeedbackValue>
+              </FeedbackButton>
+            </ButtonContainer>
+          </FeedbackBox>
+          <Line/>
         {/* TODO: 좋아요, 댓글, 공유하기, 북마크, */}
         </ArticleBox>
         <ColBanner/>
@@ -144,8 +159,41 @@ const Editor = styled.span`
   letter-spacing: -0.14px;
 `
 const Line = styled.div`
-  height: 5px;
+  height: 1px;
   width: 100%;
-  stroke: #666666;
+  background-color: #F2F0F0;
 `
-//TODO: 외않되
+const FeedbackBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+`
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+`
+const FeedbackButton = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+`
+const FeedbackTitle = styled.span`
+  color: #322F29;
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%; /* 12px */
+`
+const FeedbackValue = styled.span`
+  color: #322F29;
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%; /* 18px */
+  letter-spacing: -0.36px;
+`

@@ -28,7 +28,7 @@ export default function Header() {
                     <MenuSub href={''}>데이터 과학 </MenuSub>
                 </MenuContainer>
                 <AuthContainer>
-                    <LoginButton href={''}>로그인</LoginButton>
+                    <LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
                     <SignInButton href={''}>회원가입</SignInButton>
                 </AuthContainer>
             </NavBar>
@@ -139,7 +139,11 @@ const AuthContainer = styled.div`
     align-items: center;
     gap: 20px;
 `
-const LoginButton = styled.a`
+const LoginButton = styled.button`
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
     text-decoration: none;
     color: #322F29;
     text-align: center;
@@ -148,6 +152,7 @@ const LoginButton = styled.a`
     font-weight: 400;
     line-height: 20px; /* 142.857% */
     letter-spacing: -0.14px;
+    cursor: pointer;
 `
 const SignInButton = styled.a`
     text-decoration: none;

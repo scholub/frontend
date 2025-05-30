@@ -13,7 +13,7 @@ export default function ArticleMarkdown(ArticleMarkdownProps: ArticleMarkdownPro
       <ReactMarkdown>{parsedMarkdown}</ReactMarkdown>
     </Wrapper>
   );
-}
+} 
 
 const Wrapper = styled.div`
   display: flex;

@@ -8,19 +8,15 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+
+  
   async function login() {
-    if (email === "" || password === "") {
-      alert("이메일과 비밀번호를 입력해주세요.");
-      return;
-    }
-    if (password.length < 8) {
-      alert("비밀번호는 8자 이상이어야 합니다.");
-      return;
-    }
-    if (!emailRegex.test(email)) {
-      alert("이메일 형식이 잘못되었습니다.");
-      return;
-    }
+
+    if (email === "" || password === "") { alert("이메일과 비밀번호를 입력해주세요."); return; }
+    if (password.length < 8) { alert("비밀번호는 8자 이상이어야 합니다."); return; }
+    if (!emailRegex.test(email)) { alert("이메일 형식이 잘못되었습니다."); return; }
+
+
     const res = await fetch(serverAddress + "/user/login", {
       method: "POST",
         headers: {
@@ -31,20 +27,16 @@ export default function Login() {
         password
       })
     });
+
     if (res.status === 200) {
       const data = await res.text();
-      if (remember) {
-        localStorage.setItem("token", data);
-      } else {
-        sessionStorage.setItem("token", data);
-      }
-    } else if (res.status === 401) {
-      alert("이메일 또는 비밀번호가 잘못되었습니다.");
-    } else if (res.status === 422) {
-      alert("이메일이 형식에 맞지 않습니다.");
-    } else {
-      alert("알 수 없는 오류가 발생했습니다.");
-    }
+      if (remember) { localStorage.setItem("token", data); } 
+      else { sessionStorage.setItem("token", data); }
+    } 
+    else if (res.status === 401) { alert("이메일 또는 비밀번호가 잘못되었습니다."); } 
+    else if (res.status === 422) { alert("이메일이 형식에 맞지 않습니다."); } 
+    else { alert("알 수 없는 오류가 발생했습니다."); }
+    
   }
   return (
     <Screen>

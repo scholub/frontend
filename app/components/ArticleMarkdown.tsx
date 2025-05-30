@@ -18,14 +18,16 @@ export default function ArticleMarkdown(ArticleMarkdownProps: ArticleMarkdownPro
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  max-width: 700px;
+  max-width: 800px;
   flex-direction: column;
-  gap: 40px;
+  gap: 14px;
   align-items: start;
-
+  font-weight: 400;
+  line-height: 180%;
 
   h1 {
     margin: 0;
+    margin-top: 16px;
     padding: 0;
     font-size: 24px;
     font-weight: 700;
@@ -34,17 +36,19 @@ const Wrapper = styled.div`
 
   h2 {
     margin: 0;
+    margin-top: 16px;
     padding: 0;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
     color: #333;
   }
 
   h3 {
     margin: 0;
+    margin-top: 16px;
     padding: 0;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 700;
     color: #444;
   }
 
@@ -52,7 +56,7 @@ const Wrapper = styled.div`
     margin: 0;
     padding: 0;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 180%;
   }
 
   ul {
@@ -87,4 +91,25 @@ const Wrapper = styled.div`
     font-style: italic;
     color: #555;
   }
+    pre {
+    background-color: #23272f; /* 예시: 어두운 배경 */
+    color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    overflow-x: auto;
+    font-size: 1em;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  code {
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+  }
+
 `;

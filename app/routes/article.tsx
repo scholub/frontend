@@ -31,6 +31,7 @@ export default function Article() {
   const [bad, setBad] = useState(false);
   const [badValue, setBadValue] = useState(0);
   const [bookmark, setBookmark] = useState(false);
+  
   // 댓글 리스트 상태 관리
   const [comments, setComments] = useState<{
     id: number;
@@ -107,6 +108,7 @@ export default function Article() {
         "- 기존 플랫폼과의 차별화 포인트를 꼭 참고하세요!\n",
     });
 
+
   // 댓글 비동기 로딩 처리
   const commentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -167,7 +169,7 @@ export default function Article() {
           <Line/>
           <ContentContainer>
             {/*TODO: 마크다운 형식, 코드박스 디자인*/}
-            <ArticleMarkdown content={articleData.markdownContent} />
+            <ArticleMarkdown content={articleData.markdownContent.replaceAll('---', '')} />
           </ContentContainer>
           <Line/>
           <FeedbackBox>
@@ -221,7 +223,7 @@ export default function Article() {
           </CommentLogBox>
         </ArticleBox>
         <ColBanner/>
-        </Wrapper>
+      </Wrapper>
     </Screen>
   );
 }

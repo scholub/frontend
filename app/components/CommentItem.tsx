@@ -88,6 +88,7 @@ export default CommentItem;
 
 const CommentItemBox = styled.div`
   display: flex;
+  width: 100%;
   align-items: flex-start;
   gap: 14px;
 `;
@@ -132,6 +133,9 @@ const Content = styled.span`
   font-style: normal;
   font-weight: 400;
   line-height: 160%; /* 22.4px */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 `;
 
 const Actions = styled.div`

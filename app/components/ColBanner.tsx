@@ -16,5 +16,7 @@ const BannerContainer = styled.img`
   align-items: center;
   background-color: #747474;
   object-fit: cover;
-
+  @media (max-width: 678px) {
+    display: none;
+  }
 `

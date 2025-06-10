@@ -7,7 +7,7 @@ import GoodSvg from '~/asset/icon/good.svg?react'
 import BadSvg from '~/asset/icon/bad.svg?react'
 import ShareSvg from '~/asset/icon/share.svg?react'
 import BookmarkSvg from '~/asset/icon/bookmark.svg?react'
-import CommentItem from "~/components/CommentItem";
+import CommentItem, {type CommentItemProps} from "~/components/CommentItem";
 
 function formatDate(date: Date) {
   return date.toLocaleString("ko-KR", {
@@ -31,18 +31,35 @@ export default function Article() {
   const [bad, setBad] = useState(false);
   const [badValue, setBadValue] = useState(0);
   const [bookmark, setBookmark] = useState(false);
-  
   // 댓글 리스트 상태 관리
-  const [comments, setComments] = useState<{
-    id: number;
-    profile: string;
-    name: string;
-    time: string;
-    content: string;
-    email: string;
-    currentEmail: string;
-  }[] | null>(null);
+  const [comments, setComments] = useState<CommentItemProps[] | null>(null);
+  // 댓글 입력값 상태
+  const [commentInput, setCommentInput] = useState('');
+  // 한글/IME 입력 조합 상태
+  const [isComposing, setIsComposing] = useState(false);
+  // 댓글 추가 함수
+  const addComment = () => {
+    const content = commentInput.trim();
+    if (!content) return;
+    const newId = comments && comments.length > 0 ? comments[comments.length - 1].id + 1 : '1';
+    const newComment: CommentItemProps = {
+      id: newId,
+      profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s',
+      name: '유이',
+      time: '방금 전',
+      content,
+      email: 'current@example.com',
+      currentUserEmail: 'current@example.com',
+      likeCount: 0,
+      likedByCurrentUser: false,
+      dislikedByCurrentUser: false,
+      onDelete: () => {},
+    };
+    setComments(prev => prev ? [...prev, newComment] : [newComment]);
+    setCommentInput('');
+  };
 
+  //예시 기사(임시 삭제해야함)
   const [articleData, setArticleData] = useState<ArticleProps>({
       title: "DeepSeek-R1: 순수 RL 기반 대형 언어모델의 추론 능력 향상",
       initialTime: new Date('2024-05-12T09:00:00Z'),
@@ -108,7 +125,6 @@ export default function Article() {
         "- 기존 플랫폼과의 차별화 포인트를 꼭 참고하세요!\n",
     });
 
-
   // 댓글 비동기 로딩 처리
   const commentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -117,8 +133,46 @@ export default function Article() {
       if (!loaded && entries[0].isIntersecting) {
         setComments([
           // TODO: 받아온 댓글 넣기
-          { id: 1, profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s', name: '유이', time: '1시간 전', content: '와웅', email: 'hong@example.com', currentEmail: 'hong@example.com' },
-          { id: 2, profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREGFq17Q8ajbYOPZszUsWuTEKO1MyTIKiirQ&s', name: '프리렌', time: '2시간 전', content: '힘멜이라면 분명 그렇게 말했을거야.', email: 'kim@example.com', currentEmail: 'current@example.com' },
+          //임시 데이터
+          {
+            id: '1',
+            profile: 'https://randomuser.me/api/portraits/men/32.jpg',
+            name: '홍길동',
+            time: '1시간 전',
+            content: '정말 유용한 정보 감사합니다!',
+            likeCount: 3,
+            email: 'hong@example.com',
+            currentUserEmail: 'current@example.com',
+            likedByCurrentUser: false,
+            dislikedByCurrentUser: false,
+            onDelete: () => {}
+          },
+          {
+            id: '2',
+            profile: 'https://randomuser.me/api/portraits/women/44.jpg',
+            name: '김영희',
+            time: '30분 전',
+            content: '공감돼요. 더 자주 업데이트 되면 좋겠어요!',
+            likeCount: 5,
+            email: 'kim@example.com',
+            currentUserEmail: 'current@example.com',
+            likedByCurrentUser: false,
+            dislikedByCurrentUser: false,
+            onDelete: () => {}
+          },
+          {
+            id: '3',
+            profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s',
+            name: '유이',
+            time: '방금 전',
+            content: '이 부분에 대해 좀 더 설명해주실 수 있나요?',
+            likeCount: 99999999999,
+            email: 'current@example.com',
+            currentUserEmail: 'current@example.com',
+            likedByCurrentUser: false,
+            dislikedByCurrentUser: false,
+            onDelete: () => {}
+          }
         ]);
         loaded = true;
         observer.disconnect();
@@ -168,8 +222,7 @@ export default function Article() {
           </ArticleTitleBox>
           <Line/>
           <ContentContainer>
-            {/*TODO: 마크다운 형식, 코드박스 디자인*/}
-            <ArticleMarkdown content={articleData.markdownContent.replaceAll('---', '')} />
+            <ArticleMarkdown content={articleData.markdownContent} />
           </ContentContainer>
           <Line/>
           <FeedbackBox>
@@ -201,20 +254,37 @@ export default function Article() {
           <Line/>
           <CommentBox>
             <ProfileImage src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s'}/>
-            <CommentInput placeholder={"댓글을 남겨주세요!"}/>
-            <CommentAddButton>등록</CommentAddButton>
+            <CommentInput
+              placeholder={"댓글을 남겨주세요!"}
+              value={commentInput}
+              onChange={e => setCommentInput(e.target.value)}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !isComposing) addComment();
+              }}
+            />
+            <CommentAddButton onClick={addComment}>등록</CommentAddButton>
           </CommentBox>
           <CommentLogBox ref={commentRef}>
             {comments ? (
               comments.map((comment) => (
                 <CommentItem
                   key={comment.id}
+                  id={comment.id}
                   profile={comment.profile}
                   name={comment.name}
                   time={comment.time}
                   content={comment.content}
-                  currentUserEmail={comment.currentEmail}
+                  currentUserEmail={comment.currentUserEmail}
                   email={comment.email}
+                  likeCount={comment.likeCount ?? 0}
+                  likedByCurrentUser={comment.likedByCurrentUser}
+                  dislikedByCurrentUser={comment.dislikedByCurrentUser}
+                  onDelete={() => {
+                    if(confirm("삭제 하시겠습니까?"))
+                      setComments(comments.filter(c => c.id !== comment.id));
+                  }}
                 />
               ))
             ) : (
@@ -223,7 +293,7 @@ export default function Article() {
           </CommentLogBox>
         </ArticleBox>
         <ColBanner/>
-      </Wrapper>
+        </Wrapper>
     </Screen>
   );
 }

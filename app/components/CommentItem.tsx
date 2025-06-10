@@ -1,23 +1,41 @@
-import React, { useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import ThmbUp from "../asset/icon/thumb_up.svg?react"
 import ThmbDn from "../asset/icon/thumb_down.svg?react"
 import Delete from "../asset/icon/delete.svg?react"
 
 export interface CommentItemProps {
+  id: string;
   profile: string;
   name: string;
   time: string;
   content: string;
+  likeCount: number;
   email: string; // 댓글 작성자 이메일
   currentUserEmail: string; // 현재 로그인한 유저의 이메일
+  likedByCurrentUser: boolean;
+  dislikedByCurrentUser: boolean;
+  onDelete: () => void;
 }
 
-const CommentItem = ({ profile, name, time, content, email, currentUserEmail }: CommentItemProps) => {
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
+const CommentItem = ({
+  profile,
+  name,
+  time,
+  content,
+  email,
+  currentUserEmail,
+  onDelete,
+  likeCount,
+  likedByCurrentUser,
+  dislikedByCurrentUser
+}: CommentItemProps) => {
+  const [liked, setLiked] = useState(likedByCurrentUser);
+  const [disliked, setDisliked] = useState(dislikedByCurrentUser);
 
   const canDelete = email === currentUserEmail;
+
+  const displayLike = likeCount + (liked ? 1 : 0) - (likedByCurrentUser ? 1 : 0);
 
   return (
     <CommentItemBox>
@@ -28,18 +46,21 @@ const CommentItem = ({ profile, name, time, content, email, currentUserEmail }: 
         </NameTime>
         <Content>{content}</Content>
         <Actions>
-          <ActionButton
-            onClick={() => {
-              if (!liked) {
-                setLiked(true);
-                setDisliked(false);
-              } else {
-                setLiked(false);
-              }
-            }}
-          >
-            <ThmbUpStyled $fill={liked ? '#F7971D' : '#322F2999'} />
-          </ActionButton>
+          <LikeValueBox>
+            <ActionButton
+              onClick={() => {
+                if (!liked) {
+                  setLiked(true);
+                  setDisliked(false);
+                } else {
+                  setLiked(false);
+                }
+              }}
+            >
+              <ThmbUpStyled $fill={liked ? '#F7971D' : '#322F2999'} />
+            </ActionButton>
+            <LikeValue>{displayLike}</LikeValue>
+          </LikeValueBox>
           <ActionButton
             onClick={() => {
               if (!disliked) {
@@ -53,9 +74,7 @@ const CommentItem = ({ profile, name, time, content, email, currentUserEmail }: 
             <ThmbDnStyled $fill={disliked ? '#F7971D' : '#322F2999'} />
           </ActionButton>
           {canDelete && (
-            <ActionButton onClick={() => {
-              confirm("삭제하시겠습니까?");
-            }}>
+            <ActionButton onClick={onDelete}>
               <DeleteStyled $fill={'#322F2999'} />
             </ActionButton>
           )}
@@ -126,6 +145,20 @@ const ActionButton = styled.button`
   padding: 0;
   cursor: pointer;
 `;
+const LikeValueBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+`
+const LikeValue = styled.span`
+  color: #322F29;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 15.4px */
+  letter-spacing: -0.22px;
+`
 
 // Styled SVG components to apply path fill color
 const ThmbUpStyled = styled(ThmbUp)<{ $fill: string }>`

@@ -1,39 +1,71 @@
 import styled from "styled-components";
-import LogoSvg from "../asset/icon/logo.svg?react";
+import LogoTextSvg from "../asset/icon/logoText.svg?react";
+import LogoIcon from "../asset/icon/logoIcon.svg?react";
 import SearchSvg from "../asset/icon/search.svg?react";
 import MenuLineSvg from "../asset/icon/menuLine.svg?react";
+import MenuButtonSvg from "../asset/icon/menu.svg?react";
+import {useEffect, useState} from "react";
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
+}
 
 export default function Header() {
-    return (
-        <HeaderContainer>
+  const width = useWindowWidth();
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (width < 768) {
+      setIsMobile(true);
+    }else{
+      setIsMobile(false);
+    }
+  }, [width]);
+
+  return (
+      <HeaderContainer>
+          <SearchBarContainer>
+            <a href={"/"}>{isMobile?<LogoIcon/>:<LogoTextSvg/>}</a>
             <SearchBarContainer>
-                <a href={"/"}><LogoSvg/></a>
-                <SearchBarContainer>
-                    <SearchBar>
-                        <SearchBarInput placeholder={'관심 있는 연구를 검색해보세요!'}/>
-                        <SearchBarButton><SearchSvg/></SearchBarButton>
-                    </SearchBar>
-                </SearchBarContainer>
+                <SearchBar>
+                    <SearchBarInput placeholder={'관심 있는 연구를 검색해보세요!'}/>
+                    <SearchBarButton><SearchSvg/></SearchBarButton>
+                </SearchBar>
             </SearchBarContainer>
-            <NavBar>
-                <MenuContainer>
-                    <MenuMain href={''}>최신 연구</MenuMain>
-                    <MenuMain href={''}>인기 연구</MenuMain>
-                    <MenuMain href={''}>기사 및 칼럼</MenuMain>
-                    <MenuMain href={''}>상세 검색</MenuMain>
-                    <MenuLineSvg/>
-                    <MenuSub href={''}>컴퓨터 과학</MenuSub>
-                    <MenuSub href={''}>네트워크 및 통신</MenuSub>
-                    <MenuSub href={''}>인공지능</MenuSub>
-                    <MenuSub href={''}>데이터 과학 </MenuSub>
-                </MenuContainer>
-                <AuthContainer>
-                    <LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
-                    <SignInButton href={''}>회원가입</SignInButton>
-                </AuthContainer>
-            </NavBar>
-        </HeaderContainer>
-    );
+            {isMobile&&
+              <MenuButton onClick={()=>{
+                //TODO: 메뉴 만들기
+              }}>
+                <MenuButtonSvg/>
+              </MenuButton>
+            }
+          </SearchBarContainer>
+          <NavBar>
+              <MenuContainer>
+                  <MenuMain href={''}>최신 연구</MenuMain>
+                  <MenuMain href={''}>인기 연구</MenuMain>
+                  <MenuMain href={''}>기사 및 칼럼</MenuMain>
+                  <MenuMain href={''}>상세 검색</MenuMain>
+                  <MenuLineSvg/>
+                  <MenuSub href={''}>컴퓨터 과학</MenuSub>
+                  <MenuSub href={''}>네트워크 및 통신</MenuSub>
+                  <MenuSub href={''}>인공지능</MenuSub>
+                  <MenuSub href={''}>데이터 과학 </MenuSub>
+              </MenuContainer>
+              <AuthContainer>
+                  <LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
+                  <SignInButton href={''}>회원가입</SignInButton>
+              </AuthContainer>
+          </NavBar>
+      </HeaderContainer>
+  );
 };
 
 const HeaderContainer = styled.div`
@@ -45,18 +77,21 @@ const HeaderContainer = styled.div`
   align-items: center;
   border-bottom: black solid 1px;
   border-bottom-color: #DDDDDD;
-  margin-top: 20px;
+  padding: 20px 0;
+
 `
 const SearchBarContainer = styled.div`
-    display: flex;
-    width: 100%;
-    max-width: 600px;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    flex-direction: row;
-    height: 44px;
-    padding: 8px 20px;
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-direction: row;
+  height: 44px;
+  @media (max-width: 768px) {
+    gap: 20px;
+  }
 `
 const SearchBar = styled.div`
     display: flex;
@@ -97,15 +132,18 @@ const SearchBarButton = styled.div`
 `
 
 const NavBar = styled.div`
-    display: flex;
-    width: 100%;
-    max-width: 1200px;
-    padding: 21px 0px;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  padding: 21px 0px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 const MenuContainer = styled.div`
     display: flex;
@@ -163,4 +201,8 @@ const SignInButton = styled.a`
     font-weight: 400;
     line-height: 20px; /* 142.857% */
     letter-spacing: -0.14px;
+`
+const MenuButton = styled.div`
+  width: 24px;
+  height: 24px;
 `

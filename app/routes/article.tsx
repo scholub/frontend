@@ -430,8 +430,13 @@ const BadButton = styled(BadSvg)<{ $fill: string }>`
 }`
 const ActionBox = styled.div`
   display: flex;
+  width: 100%;
+  justify-content: center;
   align-items: flex-start;
   gap: 6px;
+  @media (max-width: 420px) {
+    flex-direction: column;
+  }
 `
 const SendButton  = styled.div`
   display: flex;
@@ -440,10 +445,15 @@ const SendButton  = styled.div`
   justify-content: center;
   align-items: center;
   gap: 4px;
+  font-size: 14px;
 
   border-radius: 4px;
   border: 1px solid #322F29;
   background: #FFF;
+
+  @media (max-width: 420px) {
+    width: 100%;
+  }
 `
 const BookmarkButton = styled.div<{ $fill: string, $textColor: string }>`
   display: flex;
@@ -460,6 +470,9 @@ const BookmarkButton = styled.div<{ $fill: string, $textColor: string }>`
   font-style: normal;
   font-weight: 400;
   line-height: 100%; /* 14px */
+  @media (max-width: 420px) {
+    width: 100%;
+  }
 `
 const Bookmark = styled(BookmarkSvg)<{ $fill: string }>`
   path {

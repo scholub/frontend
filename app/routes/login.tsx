@@ -58,7 +58,11 @@ export default function Login() {
               <Text>계정 찾기</Text>
             </BetweenFlex>
           </Container>
-          <Submit onClick={login}><Text>로그인</Text></Submit>
+          <Submit onClick={login}><Text style={{ color: "#FFF",
+          fontSize: "14px",
+          fontStyle: "normal",
+          fontWeight: 700,
+          lineHeight: "normal"}}>로그인</Text></Submit>
         </CenterFlex>
       </CenterFlex>
     </Screen>
@@ -86,7 +90,6 @@ const Screen = styled(Flex)`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100dvh;
 `
 
 const CenterFlex = styled(Flex)`
@@ -138,9 +141,14 @@ const Input = styled.input`
 `;
 
 const TextInput = styled(Input)`
+  color: #322F29;
+  padding: 10px 4px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 16.8px */
   &::placeholder {
-    text-color: rgba(50, 47, 41, 0.4);
-  }
+    color: rgba(50, 47, 41, 0.40);  }
   &:focus {
     outline: none;
     border-bottom: 1px solid #F7971D;

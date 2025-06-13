@@ -5,6 +5,7 @@ import SearchSvg from "../asset/icon/search.svg?react";
 import MenuLineSvg from "../asset/icon/menuLine.svg?react";
 import MenuButtonSvg from "../asset/icon/menu.svg?react";
 import {useEffect, useState} from "react";
+import NavMenu from "~/components/NavMenu";
 
 function useWindowWidth() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -21,6 +22,10 @@ function useWindowWidth() {
 export default function Header() {
   const width = useWindowWidth();
   const [isMobile, setIsMobile] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+
   useEffect(() => {
     if (width < 768) {
       setIsMobile(true);
@@ -41,7 +46,10 @@ export default function Header() {
             </SearchBarContainer>
             {isMobile&&
               <MenuButton onClick={()=>{
-                //TODO: 메뉴 만들기
+                setIsMenuOpen(!isMenuOpen)
+                if(isMenuOpen){
+                  console.log("열림")
+                }else console.log("닫힘")
               }}>
                 <MenuButtonSvg/>
               </MenuButton>
@@ -60,8 +68,10 @@ export default function Header() {
                   <MenuSub href={''}>데이터 과학 </MenuSub>
               </MenuContainer>
               <AuthContainer>
-                  <LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
-                  <SignInButton href={''}>회원가입</SignInButton>
+                {isLogin?
+                  <MyPage>마이페이지</MyPage>:
+                  <><LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
+                  <SignInButton href={''}>회원가입</SignInButton></>}
               </AuthContainer>
           </NavBar>
       </HeaderContainer>
@@ -135,7 +145,7 @@ const NavBar = styled.div`
   display: flex;
   width: 100%;
   max-width: 1200px;
-  padding: 21px 0px;
+  padding: 21px 0;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -205,4 +215,13 @@ const SignInButton = styled.a`
 const MenuButton = styled.div`
   width: 24px;
   height: 24px;
+`
+const MyPage = styled.a`
+  color: #322F29;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: -0.14px;
 `

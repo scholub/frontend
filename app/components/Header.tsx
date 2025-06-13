@@ -18,13 +18,18 @@ function useWindowWidth() {
   return width;
 }
 
-export default function Header() {
+interface HeaderProps {
+  thresholdWidth?: number;
+}
+
+export default function Header(props: HeaderProps) {
+  
   const width = useWindowWidth();
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    if (width < 768) {
+    if (width < (props?.thresholdWidth || 768)) {
       setIsMobile(true);
-    }else{
+    } else {
       setIsMobile(false);
     }
   }, [width]);

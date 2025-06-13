@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { styled } from "styled-components"
 import Header from "~/components/Header"
+import CheckBox from "~/components/CheckBox";
 import { serverAddress } from "../consts/backend";
 
 export default function Login() {
@@ -155,12 +156,15 @@ const TextInput = styled(Input)`
   }
 `;
 
-const CheckBox = styled(Input)`
-  max-width: 400px;
-  min-width: fit-content;
-  height: fit-content;
-  margin-right: 4px;
-`
+// const CheckBox = styled(Input)`
+//   max-width: 400px;
+//   min-width: fit-content;
+//   height: fit-content;
+//   margin-right: 4px;
+//   &:checked {
+//     background-color: #F7971D;
+//   }
+// `
 
 const Submit = styled.button`
   height: 42px;

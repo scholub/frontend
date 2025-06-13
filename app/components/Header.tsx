@@ -77,7 +77,7 @@ export default function Header(props: HeaderProps) {
                   <SignInButton href={''}>회원가입</SignInButton></>}
               </AuthContainer>
           </NavBar>
-        <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen}/>
+        <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'유이'}/>
       </HeaderContainer>
   );
 };

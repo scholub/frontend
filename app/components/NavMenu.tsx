@@ -1,9 +1,15 @@
 import styled from "styled-components";
 import {useEffect, useRef} from "react";
 
-export default function NavMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: any }) {
+interface Props {
+  isOpen: boolean;
+  setIsOpen: any;
+  name: string;
+}
+
+export default function NavMenu(props:Props) {
   const toggleSide = () => {
-    setIsOpen(false);
+    props.setIsOpen(false);
   };
   const outside = useRef<any>(null);
   const handlerOutside = (e: any) => {
@@ -19,12 +25,11 @@ export default function NavMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsO
   }, []);
 
   return(
-    <MenuContainer id="sidebar" ref={outside} className={isOpen ? 'open' : ''}>
+    <MenuContainer id="sidebar" ref={outside} className={props.isOpen ? 'open' : ''}>
       <ProfileBox>
         <UserBox>
           <ProfileImg/>
-          {/*TODO: 이름 넣기*/}
-          <Name>유이</Name>
+          <Name>{props.name}</Name>
         </UserBox>
         <MyPage>마이페이지</MyPage>
       </ProfileBox>

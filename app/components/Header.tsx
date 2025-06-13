@@ -5,7 +5,6 @@ import SearchSvg from "../asset/icon/search.svg?react";
 import MenuLineSvg from "../asset/icon/menuLine.svg?react";
 import MenuButtonSvg from "../asset/icon/menu.svg?react";
 import {useEffect, useState} from "react";
-import NavMenu from "~/components/NavMenu";
 
 function useWindowWidth() {
   const [width, setWidth] = useState(window.innerWidth);

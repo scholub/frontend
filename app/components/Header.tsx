@@ -5,6 +5,7 @@ import SearchSvg from "../asset/icon/search.svg?react";
 import MenuLineSvg from "../asset/icon/menuLine.svg?react";
 import MenuButtonSvg from "../asset/icon/menu.svg?react";
 import {useEffect, useState} from "react";
+import NavMenu from "~/components/NavMenu";
 
 function useWindowWidth() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -23,7 +24,7 @@ interface HeaderProps {
 }
 
 export default function Header(props: HeaderProps) {
-  
+
   const width = useWindowWidth();
   const [isMobile, setIsMobile] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -50,10 +51,8 @@ export default function Header(props: HeaderProps) {
             </SearchBarContainer>
             {isMobile&&
               <MenuButton onClick={()=>{
-                setIsMenuOpen(!isMenuOpen)
-                if(isMenuOpen){
-                  console.log("열림")
-                }else console.log("닫힘")
+                setIsMenuOpen(true);
+                console.log("메뉴 열림");
               }}>
                 <MenuButtonSvg/>
               </MenuButton>
@@ -78,6 +77,7 @@ export default function Header(props: HeaderProps) {
                   <SignInButton href={''}>회원가입</SignInButton></>}
               </AuthContainer>
           </NavBar>
+        <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'유이'}/>
       </HeaderContainer>
   );
 };

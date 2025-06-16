@@ -42,7 +42,9 @@ export default function Header(props: HeaderProps) {
   return (
       <HeaderContainer>
           <SearchBarContainer>
-            {isMobile?<LogoIcon/>:<LogoTextSvg/>}
+            {isMobile
+              ? <LogoIcon style={{ width: 28, height: 28, minWidth: 28, minHeight: 28 }} />
+              : <LogoTextSvg style={{ width: 116, height: 21 }} />}
             <SearchBarContainer>
                 <SearchBar>
                     <SearchBarInput placeholder={'관심 있는 연구를 검색해보세요!'}/>

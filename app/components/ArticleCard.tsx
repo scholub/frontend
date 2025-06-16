@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
+
 import styled from 'styled-components';
 import BookmarkEnabledIcon from '~/asset/icon/bookmarkEnabled.svg?react';
 import BookmarkDisabledIcon from '~/asset/icon/bookmarkDisabled.svg?react';
@@ -11,28 +13,52 @@ interface ArticleCardProps {
     isBookmarked?: boolean;
 }
 
-const ArticleCard = (props: ArticleCardProps) => {
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
+}
+
+export default function ArticleCard (props: ArticleCardProps) {
+    const width = useWindowWidth();
     const [isBookmarked, setIsBookmarked] = useState(props.isBookmarked || false);
+    const [isMobile, setIsMobile] = useState(false);
+
     const toggleBookmark = () => {
         setIsBookmarked(!isBookmarked);
         //북마크 관련 API 호출 로직 추가 필요
     };
+
+    useEffect(() => {
+        if (width < (768)) {
+          setIsMobile(true);
+        } else {
+          setIsMobile(false);
+        }
+      }, [width]);
+
+
     return(
         <ArticleCardContainer>
-            <ArticleCardImage src={props.imgUrl} alt={props.title} />
+            {!isMobile && <ArticleCardImage src={props.imgUrl} alt={props.title} /> }
             <ContetntWarper>
-                <TitleText>{props.title}</TitleText>
+                <TitleTextButton>{props.title}</TitleTextButton>
                 <SubTitleText>{props.subTitle}</SubTitleText>
                 <CategoryText>{props.category}</CategoryText>
             </ContetntWarper>
-            <BookmarkButton isBookmarked={isBookmarked} onClick={toggleBookmark}>
+            {!isMobile && <BookmarkButton isBookmarked={isBookmarked} onClick={toggleBookmark}>
                 {isBookmarked ? <BookmarkEnabledIcon /> : <BookmarkDisabledIcon />}
-            </BookmarkButton>
+            </BookmarkButton>}
+
         </ArticleCardContainer>
     );
 }
-
-export default ArticleCard;
 
 const ArticleCardContainer = styled.div`
     display: flex;
@@ -63,7 +89,7 @@ const ContetntWarper = styled.div`
     align-self: stretch;
 `;
 
-const TitleText = styled.h2`
+const TitleTextButton = styled.button`
     margin: 0;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -78,6 +104,11 @@ const TitleText = styled.h2`
     font-weight: 700;
     line-height: 24px; /* 133.333% */
     letter-spacing: -0.36px;
+    border: none;
+    background: none;
+    align-items: start;
+    text-align: start;
+    padding: 0;
 `; 
 
 const SubTitleText = styled.p`

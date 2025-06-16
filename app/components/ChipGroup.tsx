@@ -34,4 +34,5 @@ const Wrapper = styled.div`
     display: flex;
     align-items: flex-start;
     gap: 12px;
+    align-self: stretch;
 `;

@@ -154,6 +154,7 @@ const TextInput = styled(Input)`
     outline: none;
     border-bottom: 1px solid #F7971D;
   }
+  padding: 0;
 `;
 
 // const CheckBox = styled(Input)`

@@ -69,7 +69,7 @@ export default function Header(props: HeaderProps) {
                   <MenuLineSvg/>
                   <MenuSub href={''}>컴퓨터 과학</MenuSub>
                   <MenuSub href={''}>네트워크 및 통신</MenuSub>
-                  <MenuSub href={''}>인공지능</MenuSub>
+                  <MenuSub href={''} onClick={() => window.location.href = '/articleList'}>인공지능</MenuSub>
                   <MenuSub href={''}>데이터 과학 </MenuSub>
               </MenuContainer>
               <AuthContainer>
@@ -177,7 +177,7 @@ const MenuMain = styled.a`
     line-height: 26px; /* 162.5% */
     letter-spacing: -0.32px;
 `
-const MenuSub = styled.a`
+const MenuSub = styled.button`
     text-decoration: none;
     color: rgba(50, 47, 41, 0.80);
     text-align: center;
@@ -186,6 +186,10 @@ const MenuSub = styled.a`
     font-weight: 400;
     line-height: 26px; /* 162.5% */
     letter-spacing: -0.32px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    
 `
 const AuthContainer = styled.div`
     display: flex;

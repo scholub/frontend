@@ -42,7 +42,7 @@ export default function Header(props: HeaderProps) {
   return (
       <HeaderContainer>
           <SearchBarContainer>
-            <a href={"/"}>{isMobile?<LogoIcon/>:<LogoTextSvg/>}</a>
+            {isMobile?<LogoIcon/>:<LogoTextSvg/>}
             <SearchBarContainer>
                 <SearchBar>
                     <SearchBarInput placeholder={'관심 있는 연구를 검색해보세요!'}/>

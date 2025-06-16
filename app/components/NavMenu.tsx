@@ -24,6 +24,18 @@ export default function NavMenu(props:Props) {
     };
   }, []);
 
+    const mainMenu = [
+    { name: '최신 연구', href: '' },
+    { name: '인기 연구', href: '' },
+    { name: '기사 및 칼럼', href: '' },
+    { name: '상세 검색', href: '' },];
+
+  const subMenu = [
+    { name: '컴퓨터 과학', href: '' },
+    { name: '네트워크 및 통신', href: '' },
+    { name: '인공지능', href: '/articleList' },
+    { name: '데이터 과학', href: '' }];
+
   return(
     <MenuContainer id="sidebar" ref={outside} className={props.isOpen ? 'open' : ''}>
       <ProfileBox>
@@ -35,17 +47,15 @@ export default function NavMenu(props:Props) {
       </ProfileBox>
       <Line/>
       <MainMenuBox>
-        <MainMenu>최신연구</MainMenu>
-        <MainMenu>인기연구</MainMenu>
-        <MainMenu>기사 및 칼럼</MainMenu>
-        <MainMenu>상세 검색</MainMenu>
+        {mainMenu.map((menu, index) => (
+          <MainMenu key={index} href={menu.href}>{menu.name}</MainMenu>
+        ))}
       </MainMenuBox>
       <Line/>
       <SubMenuBox>
-        <SubMenu>컴퓨터 과학</SubMenu>
-        <SubMenu>네트워크 및 통신</SubMenu>
-        <SubMenu>인공지능</SubMenu>
-        <SubMenu>데이터 과학</SubMenu>
+        {subMenu.map((menu, index) => (
+          <SubMenu key={index} href={menu.href} onClick={toggleSide}>{menu.name}</SubMenu>
+        ))}
       </SubMenuBox>
     </MenuContainer>
   )

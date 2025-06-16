@@ -30,6 +30,19 @@ export default function Header(props: HeaderProps) {
   const [isLogin, setIsLogin] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const mainMenu = [
+    { name: '최신 연구', href: '' },
+    { name: '인기 연구', href: '' },
+    { name: '기사 및 칼럼', href: '' },
+    { name: '상세 검색', href: '' },];
+
+  const subMenu = [
+    { name: '컴퓨터 과학', href: '' },
+    { name: '네트워크 및 통신', href: '' },
+    { name: '인공지능', href: '/articleList' },
+    { name: '데이터 과학', href: '' }];
+  
+
 
   useEffect(() => {
     if (width < (props?.thresholdWidth || 768)) {
@@ -62,15 +75,13 @@ export default function Header(props: HeaderProps) {
           </SearchBarContainer>
           <NavBar>
               <MenuContainer>
-                  <MenuMain href={''}>최신 연구</MenuMain>
-                  <MenuMain href={''}>인기 연구</MenuMain>
-                  <MenuMain href={''}>기사 및 칼럼</MenuMain>
-                  <MenuMain href={''}>상세 검색</MenuMain>
+                  {mainMenu.map((menu, index) => (
+                      <MenuMain key={index} href={menu.href}>{menu.name}</MenuMain>
+                  ))}
                   <MenuLineSvg/>
-                  <MenuSub href={''}>컴퓨터 과학</MenuSub>
-                  <MenuSub href={''}>네트워크 및 통신</MenuSub>
-                  <MenuSub href={''} onClick={() => window.location.href = '/articleList'}>인공지능</MenuSub>
-                  <MenuSub href={''}>데이터 과학 </MenuSub>
+                  {subMenu.map((menu, index) => (
+                      <MenuSub key={index} href={menu.href}>{menu.name}</MenuSub>
+                  ))}
               </MenuContainer>
               <AuthContainer>
                 {isLogin?
@@ -177,7 +188,7 @@ const MenuMain = styled.a`
     line-height: 26px; /* 162.5% */
     letter-spacing: -0.32px;
 `
-const MenuSub = styled.button`
+const MenuSub = styled.a`
     text-decoration: none;
     color: rgba(50, 47, 41, 0.80);
     text-align: center;

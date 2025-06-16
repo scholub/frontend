@@ -4,11 +4,12 @@ import CheckIcon from "~/asset/icon/chipCheck.svg?react";
 interface ChipProps {
   label?: string;
   isSelected?: boolean;
+  onClick?: () => void;
 }
 
 export default function Chip(props: ChipProps) {
   return (
-    <ChipContainer isSelected={props.isSelected}>
+    <ChipContainer isSelected={props.isSelected} onClick={props.onClick}>
       {props.isSelected && <CheckIcon />}
       <LabelText isSelected={props.isSelected}>{props.label}</LabelText>
     </ChipContainer>
@@ -17,7 +18,7 @@ export default function Chip(props: ChipProps) {
 
 const ChipContainer = styled.button<{ isSelected?: boolean }>`
   display: flex;
-  height: 26px;
+  height: 28px;
   padding: ${({ isSelected }) => (isSelected ? '4px 10px 4px 6px' : '4px 10px')};
   justify-content: center;
   align-items: center;

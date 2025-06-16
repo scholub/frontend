@@ -43,8 +43,8 @@ export default function Header(props: HeaderProps) {
       <HeaderContainer>
           <SearchBarContainer>
             {isMobile
-              ? <LogoIcon style={{ width: 28, height: 28, minWidth: 28, minHeight: 28 }} />
-              : <LogoTextSvg style={{ width: 116, height: 21 }} />}
+              ? <LogoIcon style={{ width: 28, height: 28, minWidth: 28, minHeight: 28, cursor: 'pointer' }} onClick={() => window.location.href = '/'}/>
+              : <LogoTextSvg style={{ width: 116, height: 21, cursor: 'pointer' }} onClick={() => window.location.href = '/'} />}
             <SearchBarContainer>
                 <SearchBar>
                     <SearchBarInput placeholder={'관심 있는 연구를 검색해보세요!'}/>
@@ -56,7 +56,7 @@ export default function Header(props: HeaderProps) {
                 setIsMenuOpen(true);
                 console.log("메뉴 열림");
               }}>
-                <MenuButtonSvg/>
+                <MenuButtonSvg style={{ cursor: 'pointer' }} />
               </MenuButton>
             }
           </SearchBarContainer>

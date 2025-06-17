@@ -1,0 +1,241 @@
+import { styled } from "styled-components"
+import Header from "~/components/Header"
+import ChipGroup from "~/components/ChipGroup";
+import { useState } from "react";
+
+export default function Register() {
+
+  const [selectedChips, setSelectedChips] = useState<string[]>([]);
+  
+  return (
+    <Screen>
+      <Header />
+      <CenterFlex height="calc(100dvh - 168px)">
+        <CenterFlex gap={40}>
+          <CenterFlex height="fit-content" gap={14}>
+            <Title>회원가입</Title>
+            <Description>회원가입하여 Scholub의 모든 서비스를 이용하세요!</Description>
+          </CenterFlex>
+
+            <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            gap: '60px',
+            width: '100%',
+            }}>
+
+            {/* 왼쪽: 이메일 인증, 비밀번호 */}
+            <Container gap={30} style={{ maxWidth: '400px' }}>
+              <TextInputContainer>
+                <TextInputLabel>이메일</TextInputLabel>
+                <EmailAuthContainer>
+                  <TextInput type="email" placeholder="이메일" />
+                  <EmailAuthButton>인증하기</EmailAuthButton>
+                </EmailAuthContainer>
+              </TextInputContainer>
+              <TextInputContainer>
+                <TextInputLabel>비밀번호</TextInputLabel>
+                <TextInput type="password" placeholder="비밀번호" />
+              </TextInputContainer>
+              <TextInputContainer>
+                <TextInputLabel>비밀번호 확인</TextInputLabel>
+                <TextInput type="password" placeholder="비밀번호 확인" />
+              </TextInputContainer>
+            </Container>
+
+            {/* 오른쪽: 닉네임, 생년월일, 관심분야 */}
+            <Container gap={30} style={{ maxWidth: '400px' }}>
+              <TextInputContainer>
+                <TextInputLabel>닉네임</TextInputLabel>
+                <TextInput type="text" placeholder="닉네임" />
+              </TextInputContainer>
+              <TextInputContainer>
+                <TextInputLabel>생년월일(8자리)</TextInputLabel>
+                <TextInput type="text" placeholder="YYYY/MM/DD" />
+              </TextInputContainer>
+              <TextInputContainer>
+                <TextInputLabel>관심분야</TextInputLabel>
+                <ChipGroup
+                  options={["AI", "프론트엔드", "백엔드", "데이터 사이언스", "DevOps", "보안", "기타"]}
+                  selectedList={selectedChips}
+                  onChange={(selected) => setSelectedChips(selected)}
+                />
+
+              </TextInputContainer>
+            </Container>
+          </div>
+
+          <Submit>
+            <Text
+              style={{
+                color: "#FFF",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "normal",
+              }}
+            >
+              로그인
+            </Text>
+          </Submit>
+        </CenterFlex>
+      </CenterFlex>
+    </Screen>
+  )
+}
+
+interface FlexProps {
+  direction?: "row" | "column",
+  gap?: number,
+  height?: string,
+  width?: string,
+  maxwidth?: string
+}
+
+const Flex = styled.div <FlexProps>`
+  ${props => props.gap ? `gap: ${props.gap}px;` : ""}
+  ${props => props.height ? `height: ${props.height};` : ""}
+  ${props => props.width ? `width: ${props.width};` : ""}
+  ${props => props.maxwidth ? `max-width: ${props.maxwidth};` : ""}
+  display: flex;
+  flex-direction: ${props => props.direction || "column"};
+  margin: 0;
+  padding: 0;
+`
+
+const Screen = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`
+
+const CenterFlex = styled(Flex)`
+  width: ${props => props.width || "100%"};
+  align-items: center;
+  justify-content: center;
+`
+
+const Container = styled(CenterFlex)`
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  `
+
+const Text = styled.span`
+  color: #322f29;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.14px;
+  text-align: center;
+  height: fit-content;
+`
+
+const Title = styled(Text)`
+  font-size: 24px;
+  font-weight: 800;
+`
+
+const Description = styled(Text)`
+  font-size: 16px;
+  font-weight: 400;
+`
+
+const Input = styled.input`
+  display: flex;
+  height: 48px;
+  padding: 10px 4px;
+  align-items: center;
+  flex: 1 0 0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+`
+
+const TextInput = styled(Input)`
+  color: #322f29;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 120%;
+  padding: 0;
+
+  &::placeholder {
+    color: rgba(50, 47, 41, 0.4);
+  }
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid #f7971d;
+  }
+`
+
+const Submit = styled.button`
+  height: 42px;
+  padding: 10px;
+  align-self: stretch;
+  border: none;
+  border-radius: 4px;
+  background: #f7971d;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+`
+
+const TextInputContainer = styled.div`
+  width: 100%;
+  display: flex;
+  height: 64px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+  align-self: stretch;
+`
+
+const TextInputLabel = styled.text`
+  color: #000;
+  font-family: NanumSquareRound;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+`
+
+const EmailAuthContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  flex: 1 0 0;
+  align-self: stretch;
+`
+
+const EmailAuthButton = styled.button`
+  display: flex;
+  width: 72px;
+  height: 40px;
+  padding: 10px 14px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 4px;
+  background: #f7971d;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+`
+
+const CheckBoxGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`
+
+export function meta() {
+  return [{
+    title: "Scholub 회원가입"
+  }]
+}

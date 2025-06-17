@@ -10,7 +10,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
 
-  
+
   async function login() {
 
     if (email === "" || password === "") { alert("이메일과 비밀번호를 입력해주세요."); return; }
@@ -30,14 +30,14 @@ export default function Login() {
     });
 
     if (res.status === 200) {
-      const data = await res.text();
-      if (remember) { localStorage.setItem("token", data); } 
+      const data = await res.json();
+      if (remember) { localStorage.setItem("token", data); }
       else { sessionStorage.setItem("token", data); }
-    } 
-    else if (res.status === 401) { alert("이메일 또는 비밀번호가 잘못되었습니다."); } 
-    else if (res.status === 422) { alert("이메일이 형식에 맞지 않습니다."); } 
+    }
+    else if (res.status === 401) { alert("이메일 또는 비밀번호가 잘못되었습니다."); }
+    else if (res.status === 422) { alert("이메일이 형식에 맞지 않습니다."); }
     else { alert("알 수 없는 오류가 발생했습니다."); }
-    
+
   }
   return (
     <Screen>

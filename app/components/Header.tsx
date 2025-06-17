@@ -87,7 +87,7 @@ export default function Header(props: HeaderProps) {
                 {isLogin?
                   <MyPage>마이페이지</MyPage>:
                   <><LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
-                  <SignInButton href={''}>회원가입</SignInButton></>}
+                  <SignInButton href={'register'}>회원가입</SignInButton></>}
               </AuthContainer>
           </NavBar>
         <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'유이'}/>

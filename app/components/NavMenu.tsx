@@ -75,7 +75,7 @@ const MenuContainer = styled.div`
   border-radius: 8px 0 0 8px;
   background: #fff;
 
-  z-index: 5;
+  z-index: 100;
   right: -1000px;
   top: 0;
   transition: 0.5s ease;

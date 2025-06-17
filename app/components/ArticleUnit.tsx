@@ -1,18 +1,26 @@
 import styled from "styled-components";
 
 export interface ArticleListProps {
+  paper_id: string;
+  created: string;
   title: string;
-  subTitle: string;
   imgUrl: string;
+  description: string;
   category: string;
+  tag: string;
+  modified: string;
+  like_count: number;
+  dislike_count: number;
 }
 
 export default function ArticleUnit(props: ArticleListProps) {
   return (
-    <ArticleContainer>
+    <ArticleContainer onClick={()=>{
+      window.location.href = "https://scholub.misile.xyz/files/post/" + props.paper_id + "/post.md";
+    }}>
       <ArticleImg/>
       <ArticleTitle>{props.title}</ArticleTitle>
-      <ArticleSubTitle>{props.subTitle}</ArticleSubTitle>
+      <ArticleSubTitle>{props.description}</ArticleSubTitle>
       <ArticleCategory>{props.category}</ArticleCategory>
     </ArticleContainer>
   )
@@ -42,17 +50,20 @@ const ArticleTitle = styled.span`
   letter-spacing: -0.36px;
 `
 const ArticleSubTitle = styled.span`
-  overflow: hidden;
   color: #322F29;
-  text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 120%; /* 16.8px */
   letter-spacing: -0.28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+
 `
 const ArticleCategory = styled.span`
+  width: 100%;
   color: #F7971D;
   text-align: center;
   font-size: 12px;

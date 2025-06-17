@@ -16,9 +16,9 @@ export interface ArticleListProps {
 export default function ArticleUnit(props: ArticleListProps) {
   return (
     <ArticleContainer onClick={()=>{
-      window.location.href = "https://scholub.misile.xyz/files/post/" + props.paper_id + "/post.md";
+      window.location.href =  `/article/${props.paper_id}`;
     }}>
-      <ArticleImg/>
+      <ArticleImg src={props.imgUrl}/>
       <ArticleTitle>{props.title}</ArticleTitle>
       <ArticleSubTitle>{props.description}</ArticleSubTitle>
       <ArticleCategory>{props.category}</ArticleCategory>
@@ -39,6 +39,8 @@ const ArticleImg = styled.img`
   border-radius: 4px;
   border: 1px solid #DDD;
   background-color: #696969;
+  overflow: hidden;
+  object-fit: cover;
 `
 const ArticleTitle = styled.span`
   align-self: stretch;

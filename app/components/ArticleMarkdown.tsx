@@ -40,7 +40,7 @@ const Wrapper = styled.div`
     padding: 0;
     font-size: 20px;
     font-weight: 700;
-    color: #333;
+    color: #322F29;
   }
 
   h3 {
@@ -49,7 +49,7 @@ const Wrapper = styled.div`
     padding: 0;
     font-size: 18px;
     font-weight: 700;
-    color: #444;
+    color: #322F29;
   }
 
   p {
@@ -80,16 +80,19 @@ const Wrapper = styled.div`
     display: flex;
     justify-self: center;
     width: 80%;
+    height: auto;
+    object-fit: cover;
+    max-height: 560px;
   }
 
   strong {
     //font-weight: bold;
-    //color: #ff0000;  // 필요시 색상 지정
+    //color: #000000;  // 필요시 색상 지정
   }
 
   em {
     font-style: italic;
-    color: #555;
+    color: #322F29;
   }
     pre {
     background-color: #23272f; /* 예시: 어두운 배경 */

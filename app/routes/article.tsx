@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ArticleMarkdown from "~/components/ArticleMarkdown";
-import React, {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef} from "react";
 import ColBanner from "~/components/ColBanner";
 import Header from "~/components/Header";
 import GoodSvg from '~/asset/icon/good.svg?react'
@@ -8,6 +8,7 @@ import BadSvg from '~/asset/icon/bad.svg?react'
 import ShareSvg from '~/asset/icon/share.svg?react'
 import BookmarkSvg from '~/asset/icon/bookmark.svg?react'
 import CommentItem, {type CommentItemProps} from "~/components/CommentItem";
+import {useParams} from "react-router";
 
 function formatDate(date: Date) {
   return date.toLocaleString("ko-KR", {
@@ -16,15 +17,80 @@ function formatDate(date: Date) {
   });
 }
 
-interface ArticleProps {
+interface ArticleData {
   title: string;
-  initialTime: Date;
-  fixedTime: Date;
+  description: string;
+  paper_id: string;
   category: string;
-  markdownContent: string;
+  tag: string;
+  created: Date;
+  modified: Date;
+  like_count: number;
+  dislike_count: number;
 }
 
 export default function Article() {
+  const { paper_id } = useParams<{ paper_id: string }>();
+  const [articleData, setArticleData] = useState<ArticleData>({
+    title: '',
+    description: '',
+    paper_id: '',
+    category: '',
+    tag: '',
+    created: new Date(),
+    modified: new Date(),
+    like_count: 0,
+    dislike_count: 0,
+  });
+  const [content, setContent] = useState<string>('');
+
+  useEffect(() => {
+    if (!paper_id) return;
+    fetch(`https://scholub.misile.xyz/post/${paper_id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        fetch(`https://scholub.misile.xyz/files/post/${paper_id}/post.md`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then((markdown) => {
+              const basePath = `https://scholub.misile.xyz/files/post/${paper_id}`;
+              const updatedMarkdown = markdown.replace(
+                /!\[image\]\(\.\/files\/post\/[^/]+\/([^)]+)\)/g,
+                (match, imagePath) => `![image](${basePath}/${imagePath})`
+              );
+              setContent(updatedMarkdown);
+          })
+          .catch((error) => {
+            console.error("Error fetching markdown content:", error);
+          });
+
+        setArticleData({
+          title: data.title,
+          description: data.description,
+          paper_id: data.paper_id,
+          category: data.category,
+          tag: data.tag,
+          created: data.created,
+          modified: data.modified,
+          like_count: data.like_count || 0,
+          dislike_count: data.dislike_count || 0,
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching article data:", error);
+      });
+
+  }, [paper_id]);
+  
   // 좋아요, 싫어요 상태
   const [good, setGood] = useState(false);
   const [goodValue, setGoodValue] = useState(0);
@@ -58,72 +124,6 @@ export default function Article() {
     setComments(prev => prev ? [...prev, newComment] : [newComment]);
     setCommentInput('');
   };
-
-  //예시 기사(임시 삭제해야함)
-  const [articleData, setArticleData] = useState<ArticleProps>({
-      title: "DeepSeek-R1: 순수 RL 기반 대형 언어모델의 추론 능력 향상",
-      initialTime: new Date('2024-05-12T09:00:00Z'),
-      fixedTime: new Date("2024-05-13T14:30:00Z"),
-      category: "AI Research",
-      markdownContent: "# 📚 Scholub: 지식의 허브를 향하여\n" +
-        "---\n" +
-        "## 개요\n" +
-        "**Scholub**는 \"Scholar\"와 \"Hub\"의 합성어로, 최신 논문을 뉴스 형태로 가공하여 사용자들이 지식을 공유하고 토론할 수 있는 커뮤니티 플랫폼입니다. > *\"연구자의 연구가 대중의 대화로 이어지길 바라며.\"*\n" +
-        "---\n" +
-        "## 주요 기능 🔍\n" +
-        "1. **논문 요약 및 뉴스화**  AI가 최신 논문을 자동 요약하고, 뉴스처럼 가공해 제공합니다.\n" +
-        "2. **커뮤니티 토론**  뉴스 형태의 게시물에 댓글과 좋아요 기능으로 활발한 토론을 유도합니다.\n" +
-        "3. **맞춤형 추천**  사용자의 관심사에 따라 논문과 뉴스 피드를 개인화합니다.\n" +
-        "---\n" +
-        "### 기술 스택 💻\n" +
-        "- **Frontend**: React, PWA  \n" +
-        "- **Backend**: FastAPI, MongoDB  \n" +
-        "- **AI 기술**: LLM, 자연어 처리  \n" +
-        "- **UX/UI**: 카테고리별 뉴스 게시판, 채팅 인터페이스  \n" +
-        "---\n" +
-        "### 개발 일정 🗓️\n" +
-        "| 월 | 주차 | 주요 작업 |\n" +
-        "|---|---|---|\n" +
-        "| 4월 | 1~2주차 | 기획서 작성 |\n" +
-        "| 4월 | 3~4주차 | 디자인 |\n" +
-        "| 5월 | 1~4주차 | 프론트엔드/백엔드 개발 |\n" +
-        "| 6월 | 1~4주차 | 테스트 및 버그 수정 |\n" +
-        "| 7월 | - | 부가 기능 개발 |\n" +
-        "---\n" +
-        "### 팀원 역할 👥\n" +
-        "- **박찬규**: 백엔드 (API, DB 관리, 크롤러 제작)  \n" +
-        "- **설지원**: 프론트엔드 (뉴스 피드, 댓글 기능, 랜딩 페이지)  \n" +
-        "- **유채호**: AI (논문 요약, 딥리서치, LLM 챗봇)  \n" +
-        "---\n" +
-        "### 특장점 🌟\n" +
-        "- [ ] 빠른 논문 탐색과 요약\n" +
-        "- [ ] 커뮤니티 기반 토론\n" +
-        "- [ ] 사용자 친화적 인터페이스\n" +
-        "- [ ] AI 기반 개인화 뉴스\n" +
-        "---\n" +
-        "## 참고 이미지  \n" +
-        "![Scholub Concept](https://i.namu.wiki/i/6OwDAUYGGTGzVc0dXzTQ8qEk4qoHf___fOy4XGH5ksiDkCsv1x4XldPjmKwsuIRDy9adqD9QOj0jJqHpTPsiIg.webp)\n" +
-        "---\n" +
-        "### 코드 예시 👨‍💻\n" +
-        "```python\n" +
-        "from fastapi import FastAPI\n" +
-        "app = FastAPI()\n" +
-        "@app.get(\"/news\")\n" +
-        "async def get_news():\n" +
-        "    return {\"message\": \"최신 논문 뉴스 피드\"}\n" +
-        "```\n" +
-        "---\n" +
-        "### 인용구 📜\n" +
-        "> \"지식을 나누는 일은 세상을 바꾸는 첫걸음이다.\" - 알베르트 아인슈타인\n" +
-        "---\n" +
-        "### 링크 🔗\n" +
-        "- 공식 홈페이지: [Scholub](https://scholub.com)\n" +
-        "- 연락처: [이메일](mailto:contact@scholub.com)\n" +
-        "---\n" +
-        "### 참고 자료 📑\n" +
-        "- ~~논문 전체 열람이 필요하다면 arXiv 사용을 권장드립니다.~~  \n" +
-        "- 기존 플랫폼과의 차별화 포인트를 꼭 참고하세요!\n",
-    });
 
   // 댓글 비동기 로딩 처리
   const commentRef = useRef<HTMLDivElement>(null);
@@ -215,14 +215,14 @@ export default function Article() {
             <Category>{articleData.category}</Category>
             <Title>{articleData.title}</Title>
             <DateBox>
-              <DateView>{formatDate(articleData.initialTime)}</DateView>
-              <DateView>{formatDate(articleData.fixedTime)}</DateView>
+              <DateView>{formatDate(articleData.created)}</DateView>
+              <DateView>{formatDate(articleData.modified)}</DateView>
             </DateBox>
             <Editor>AI 뉴스 에디터 작성</Editor>
           </ArticleTitleBox>
           <Line/>
           <ContentContainer>
-            <ArticleMarkdown content={articleData.markdownContent} />
+            <ArticleMarkdown content={content} />
           </ContentContainer>
           <Line/>
           <FeedbackBox>

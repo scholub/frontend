@@ -6,7 +6,14 @@ import { useState } from "react";
 export default function Register() {
 
   const [selectedChips, setSelectedChips] = useState<string[]>([]);
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+
+
+
   return (
     <Screen>
       <Header />
@@ -30,17 +37,32 @@ export default function Register() {
               <TextInputContainer>
                 <TextInputLabel>이메일</TextInputLabel>
                 <EmailAuthContainer>
-                  <TextInput type="email" placeholder="이메일" />
+                  <TextInput
+                    type="email"
+                    placeholder="이메일"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                  />
                   <EmailAuthButton>인증하기</EmailAuthButton>
                 </EmailAuthContainer>
               </TextInputContainer>
               <TextInputContainer>
                 <TextInputLabel>비밀번호</TextInputLabel>
-                <TextInput type="password" placeholder="비밀번호" />
+                <TextInput
+                  type="password"
+                  placeholder="비밀번호"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                 />
               </TextInputContainer>
               <TextInputContainer>
                 <TextInputLabel>비밀번호 확인</TextInputLabel>
-                <TextInput type="password" placeholder="비밀번호 확인" />
+                <TextInput
+                type="password"
+                placeholder="비밀번호 확인"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+                />
               </TextInputContainer>
             </Container>
 
@@ -48,11 +70,21 @@ export default function Register() {
             <Container gap={30} style={{ maxWidth: '400px' }}>
               <TextInputContainer>
                 <TextInputLabel>닉네임</TextInputLabel>
-                <TextInput type="text" placeholder="닉네임" />
+                <TextInput
+                type="text"
+                placeholder="닉네임"
+                value={nickname}
+                onChange={e => setNickname(e.target.value)}
+                />
               </TextInputContainer>
               <TextInputContainer>
                 <TextInputLabel>생년월일(8자리)</TextInputLabel>
-                <TextInput type="text" placeholder="YYYY/MM/DD" />
+                <TextInput
+                type="text"
+                placeholder="YYYY/MM/DD"
+                value={birthdate}
+                onChange={e => setBirthdate(e.target.value)}
+                 />
               </TextInputContainer>
               <TextInputContainer>
                 <TextInputLabel>관심분야</TextInputLabel>

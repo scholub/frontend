@@ -33,6 +33,7 @@ export default function Login() {
       const data = await res.json();
       if (remember) { localStorage.setItem("token", data); }
       else { sessionStorage.setItem("token", data); }
+      window.location.href = "/";
     }
     else if (res.status === 401) { alert("이메일 또는 비밀번호가 잘못되었습니다."); }
     else if (res.status === 422) { alert("이메일이 형식에 맞지 않습니다."); }

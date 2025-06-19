@@ -64,8 +64,8 @@ export default function Article() {
           .then((markdown) => {
               const basePath = `https://scholub.misile.xyz/files/post/${paper_id}`;
               const updatedMarkdown = markdown.replace(
-                /!\[image\]\(\.\/files\/post\/[^/]+\/([^)]+)\)/g,
-                (match, imagePath) => `![image](${basePath}/${imagePath})`
+                /!\[image\]\(\/files\/post\/[^/]+\/([^)]+)\)/g,
+                (_, imagePath) => `![image](${basePath}/${imagePath})`
               );
               setContent(updatedMarkdown);
           })
@@ -131,22 +131,17 @@ export default function Article() {
     let loaded = false;
     const observer = new window.IntersectionObserver((entries) => {
       if (!loaded && entries[0].isIntersecting) {
+        fetch(`https://scholub.misile.xyz/${paper_id}/comment`)
+          .then(response => response.json())
+          .then(data => {
+            console.log("댓글 데이터:", data);
+          })
+          .catch(error => {
+            console.error("Error fetching comments:", error);
+          });
+
         setComments([
-          // TODO: 받아온 댓글 넣기
           //임시 데이터
-          {
-            id: '1',
-            profile: 'https://randomuser.me/api/portraits/men/32.jpg',
-            name: '홍길동',
-            time: '1시간 전',
-            content: '정말 유용한 정보 감사합니다!',
-            likeCount: 3,
-            email: 'hong@example.com',
-            currentUserEmail: 'current@example.com',
-            likedByCurrentUser: false,
-            dislikedByCurrentUser: false,
-            onDelete: () => {}
-          },
           {
             id: '2',
             profile: 'https://randomuser.me/api/portraits/women/44.jpg',

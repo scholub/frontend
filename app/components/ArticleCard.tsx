@@ -46,11 +46,11 @@ export default function ArticleCard (props: ArticleCardProps) {
 
 
     return(
-        <ArticleCardContainer onClick={() => {
+        <ArticleCardContainer>
+            {!isMobile && <ArticleCardImage src={props.imgUrl} alt={props.title} /> }
+            <ContetntWarper onClick={() => {
             window.location.href = `/article/${props.paper_id}`;
         }}>
-            {!isMobile && <ArticleCardImage src={props.imgUrl} alt={props.title} /> }
-            <ContetntWarper>
                 <TitleTextButton>{props.title}</TitleTextButton>
                 <SubTitleText>{props.subTitle}</SubTitleText>
                 <CategoryText>{props.category}</CategoryText>

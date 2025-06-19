@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import {useEffect, useRef} from "react";
 
 interface Props {
@@ -18,11 +18,34 @@ export default function NavMenu(props:Props) {
     }
   };
   useEffect(() => {
+    let openTimeout: NodeJS.Timeout;
+    let closeTimeout: NodeJS.Timeout;
+
+    if (props.isOpen) {
+      document.body.classList.remove('menu-closing');
+      document.body.classList.add('menu-opening');
+      openTimeout = setTimeout(() => {
+        document.body.classList.remove('menu-opening');
+        document.body.classList.add('menu-open');
+      }, 300);
+    } else {
+      document.body.classList.remove('menu-open');
+      document.body.classList.add('menu-closing');
+      closeTimeout = setTimeout(() => {
+        document.body.classList.remove('menu-closing');
+      }, 300);
+    }
+
     document.addEventListener('mousedown', handlerOutside);
     return () => {
+      clearTimeout(openTimeout);
+      clearTimeout(closeTimeout);
+      document.body.classList.remove('menu-open');
+      document.body.classList.remove('menu-opening');
+      document.body.classList.remove('menu-closing');
       document.removeEventListener('mousedown', handlerOutside);
     };
-  }, []);
+  }, [props.isOpen]);
 
     const mainMenu = [
     { name: '최신 연구', href: '' },
@@ -37,27 +60,30 @@ export default function NavMenu(props:Props) {
     { name: '데이터 과학', href: '' }];
 
   return(
-    <MenuContainer id="sidebar" ref={outside} className={props.isOpen ? 'open' : ''}>
-      <ProfileBox>
-        <UserBox>
-          <ProfileImg/>
-          <Name>{props.name}</Name>
-        </UserBox>
-        <MyPage>마이페이지</MyPage>
-      </ProfileBox>
-      <Line/>
-      <MainMenuBox>
-        {mainMenu.map((menu, index) => (
-          <MainMenu key={index} href={menu.href}>{menu.name}</MainMenu>
-        ))}
-      </MainMenuBox>
-      <Line/>
-      <SubMenuBox>
-        {subMenu.map((menu, index) => (
-          <SubMenu key={index} href={menu.href} onClick={toggleSide}>{menu.name}</SubMenu>
-        ))}
-      </SubMenuBox>
-    </MenuContainer>
+    <>
+      <Backdrop />
+      <MenuContainer id="sidebar" ref={outside} className={props.isOpen ? 'open' : ''}>
+        <ProfileBox>
+          <UserBox>
+            <ProfileImg/>
+            <Name>{props.name}</Name>
+          </UserBox>
+          <MyPage>마이페이지</MyPage>
+        </ProfileBox>
+        <Line/>
+        <MainMenuBox>
+          {mainMenu.map((menu, index) => (
+            <MainMenu key={index} href={menu.href}>{menu.name}</MainMenu>
+          ))}
+        </MainMenuBox>
+        <Line/>
+        <SubMenuBox>
+          {subMenu.map((menu, index) => (
+            <SubMenu key={index} href={menu.href} onClick={toggleSide}>{menu.name}</SubMenu>
+          ))}
+        </SubMenuBox>
+      </MenuContainer>
+    </>
   )
 }
 
@@ -78,11 +104,11 @@ const MenuContainer = styled.div`
   z-index: 100;
   right: -1000px;
   top: 0;
-  transition: 0.5s ease;
+  transition: 0.8s cubic-bezier(0.48, -0.07, 0.74, 0.05); 
 
   &.open {
     right: 0;
-    transition: 0.5s ease;
+    transition: 0.8s ease;
   }
   @media (min-width: 1050px) {
     display: none;
@@ -167,3 +193,30 @@ const SubMenu = styled.a`
   letter-spacing: -0.14px;
   text-decoration: none;
 `
+const Backdrop = createGlobalStyle`
+  body.menu-open::before,
+  body.menu-closing::before,
+  body.menu-opening::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.5s ease;
+  }
+
+  body.menu-opening::before {
+    background-color: rgba(0, 0, 0, 0.0);
+  }
+
+  body.menu-open::before {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  body.menu-closing::before {
+    background-color: rgba(0, 0, 0, 0);
+  }
+`;

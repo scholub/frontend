@@ -84,7 +84,7 @@ const MenuContainer = styled.div`
     right: 0;
     transition: 0.5s ease;
   }
-  @media (min-width: 768px) {
+  @media (min-width: 1050px) {
     display: none;
   }
 `
@@ -146,6 +146,7 @@ const MainMenu = styled.a`
   font-weight: 700;
   line-height: 20px; /* 142.857% */
   letter-spacing: -0.14px;
+  text-decoration: none;
 `
 const SubMenuBox = styled.div`
   display: flex;
@@ -164,4 +165,5 @@ const SubMenu = styled.a`
   font-weight: 400;
   line-height: 20px; /* 142.857% */
   letter-spacing: -0.14px;
+  text-decoration: none;
 `

@@ -45,7 +45,7 @@ export default function Header(props: HeaderProps) {
 
 
   useEffect(() => {
-    if (width < (props?.thresholdWidth || 768)) {
+    if (width < (props?.thresholdWidth || 1050)) {
       setIsMobile(true);
     } else {
       setIsMobile(false);
@@ -116,7 +116,7 @@ const SearchBarContainer = styled.div`
   gap: 30px;
   flex-direction: row;
   height: 44px;
-  @media (max-width: 768px) {
+  @media (max-width: 1050px) {
     gap: 20px;
   }
 `
@@ -168,7 +168,7 @@ const NavBar = styled.div`
   align-items: center;
   gap: 10px;
   align-self: stretch;
-  @media (max-width: 768px) {
+  @media (max-width: 1050px) {
     display: none;
   }
 `

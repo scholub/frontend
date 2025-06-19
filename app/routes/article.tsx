@@ -67,7 +67,7 @@ export default function Article() {
                 /!\[image\]\(\/files\/post\/[^/]+\/([^)]+)\)/g,
                 (_, imagePath) => `![image](${basePath}/${imagePath})`
               );
-              setContent(updatedMarkdown);
+              setContent('리에서 **토큰화(tokenization)**는 \n' +updatedMarkdown);
           })
           .catch((error) => {
             console.error("Error fetching markdown content:", error);

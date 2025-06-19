@@ -1,5 +1,9 @@
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import styled from "styled-components";
+import remarkBreaks from "remark-breaks";
+
+
 
 interface ArticleMarkdownProps {
   content: string
@@ -7,10 +11,13 @@ interface ArticleMarkdownProps {
 
 export default function ArticleMarkdown(ArticleMarkdownProps: ArticleMarkdownProps) {
   const parsedMarkdown = ArticleMarkdownProps.content.replace(/\\n/g, "\n");
+  const fixedStrong = parsedMarkdown.replace(/\*\*([^*]+?\([^)]+\))\*\*(?=\S)/g,'**$1** ');
 
   return (
     <Wrapper>
-      <ReactMarkdown>{parsedMarkdown}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {fixedStrong}
+      </ReactMarkdown>
     </Wrapper>
   );
 } 
@@ -86,8 +93,8 @@ const Wrapper = styled.div`
   }
 
   strong {
-    //font-weight: bold;
-    //color: #000000;  // 필요시 색상 지정
+  font-family: 'NanumSquareRoundB';
+    // color: #ff0000;
   }
 
   em {
@@ -95,7 +102,7 @@ const Wrapper = styled.div`
     color: #322F29;
   }
     pre {
-    background-color: #23272f; /* 예시: 어두운 배경 */
+    background-color: #23272f;
     color: #ffffff;
     padding: 30px;
     border-radius: 10px;

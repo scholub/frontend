@@ -2,9 +2,9 @@ import styled from "styled-components";
 import Header from "~/components/Header";
 import RowBanner from "~/components/RowBanner";
 import ChipGroup from "~/components/ChipGroup";
-import ArticleCard from "~/components/ArticleCard";
+import ArticleCard, { type ArticleCardProps } from "~/components/ArticleCard";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function ArticleList() {
@@ -19,26 +19,26 @@ export default function ArticleList() {
         "생성 모델",
         "XAI"
     ];
-    const articles = [
-        {
-            title: "구글 브레인 연구팀, RNN 없는 번역 모델 제안… “영어-독일어 번역 성능 향상”",
-            subTitle: "대규모 언어 모델 기반 논문 요약",
-            imgUrl: "https://place-hold.it/400x300/fff/005/000?text=Greeting!&fontsize=40",
-            category: "인공지능 > 딥러닝, NLP·LLM"
-        },
-        {
-            title: "AI 요약 기술의 현재",
-            subTitle: "대규모 언어 모델 기반 논문 요약",
-            imgUrl: "https://place-hold.it/400x300/fff/005/000?text=Greeting!&fontsize=40",
-            category: "인공지능 > 딥러닝, NLP·LLM"
-        },
-        {
-            title: "AI 요약 기술의 현재",
-            subTitle: "대규모 언어 모델 기반 논문 요약",
-            imgUrl: "https://place-hold.it/400x300/fff/005/000?text=Greeting!&fontsize=40",
-            category: "인공지능 > 딥러닝, NLP·LLM"
-        }
-    ];
+    const [articles, setArticles] = useState<ArticleCardProps[]>([]);
+
+    useEffect(() => {
+        fetch("https://scholub.misile.xyz/post")
+            .then((response) => response.json())
+            .then((data) => {
+                setArticles([
+                    {
+                        paper_id: data[0].paper_id,
+                        title: data[0].title,
+                        subTitle: data[0].description,
+                        imgUrl: `https://scholub.misile.xyz/files/post/${data[0].paper_id}/IMAGE_PLACEHOLDER_URL_1.png`,
+                        category: data[0].category,
+                    },
+                ]);
+            })
+            .catch((error) => {
+                console.error("Error fetching articles:", error);
+            });
+    }, []);
 
     return (
         <Screen>
@@ -66,6 +66,7 @@ export default function ArticleList() {
                         }}
                     >
                         <ArticleCard
+                            paper_id={article.paper_id}
                             title={article.title}
                             subTitle={article.subTitle}
                             imgUrl={article.imgUrl}
@@ -85,7 +86,7 @@ const Screen = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  height: 100dvh;
+//   height: 100dvh;
   width: 100%;
   max-width: 1200px;
 `

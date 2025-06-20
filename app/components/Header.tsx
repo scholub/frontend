@@ -78,9 +78,11 @@ export default function Header(props: HeaderProps) {
   return (
       <HeaderContainer>
           <SearchBarContainer>
-            {isMobile
+            <div style={{ width:116.057, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              {isMobile
               ? <LogoIcon style={{ width: 28, height: 28, minWidth: 28, minHeight: 28, cursor: 'pointer' }} onClick={() => window.location.href = '/'}/>
               : <LogoTextSvg style={{ width: 116, height: 21, cursor: 'pointer' }} onClick={() => window.location.href = '/'} />}
+            </div>
             <SearchBarContainer>
                 <SearchBar>
                     <SearchBarInput placeholder={'관심 있는 연구를 검색해보세요!'}/>
@@ -143,6 +145,7 @@ const SearchBarContainer = styled.div`
   gap: 30px;
   flex-direction: row;
   height: 44px;
+  padding: 10px 0;
   @media (max-width: 1050px) {
     gap: 20px;
   }

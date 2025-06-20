@@ -4,7 +4,7 @@ import LogoIcon from "../asset/icon/logoIcon.svg?react";
 import SearchSvg from "../asset/icon/search.svg?react";
 import MenuLineSvg from "../asset/icon/menuLine.svg?react";
 import MenuButtonSvg from "../asset/icon/menu.svg?react";
-import {use, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import NavMenu from "~/components/NavMenu";
 
 
@@ -25,7 +25,6 @@ interface HeaderProps {
 }
 
 export default function Header(props: HeaderProps) {
-
   const width = useWindowWidth();
   const [isMobile, setIsMobile] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -118,7 +117,7 @@ export default function Header(props: HeaderProps) {
                   <SignInButton href={'register'}>회원가입</SignInButton></>}
               </AuthContainer>
           </NavBar>
-        <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'페른'}/>
+        <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'페른'} isLogin={isLogin} />
       </HeaderContainer>
   );
 };

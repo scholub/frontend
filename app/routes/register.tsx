@@ -43,7 +43,21 @@ export default function Register() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                   />
-                  <EmailAuthButton>인증하기</EmailAuthButton>
+                  <EmailAuthButton onClick={() => {
+                    console.log("이메일 인증 요청:", email);
+                    const ws = new WebSocket("https://scholub.misile.xyz/user/register");
+                    ws.onopen = () => {
+                      ws.send(email);
+                    };
+                    ws.onmessage = (event) => {
+                      const data = JSON.parse(event.data);
+                      console.log("웹소켓 메시지 수신:", data);
+                    };
+                    ws.onerror = () => {
+                      console.log("웹소켓 연결에 실패했습니다.");
+                    };
+                    //TODO: 이메일 인증 로직 추가
+                  }}>인증하기</EmailAuthButton>
                 </EmailAuthContainer>
               </TextInputContainer>
               <TextInputContainer>

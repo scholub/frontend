@@ -30,6 +30,7 @@ const ChipContainer = styled.button<{ isSelected?: boolean }>`
 
 
 const LabelText = styled.span<{ isSelected?: boolean }>`
+  width: fit-content;
   color: ${({ isSelected }) => isSelected ? 'rgba(247, 151, 29, 1)' : 'rgba(241, 184, 111, 1)'};
   font-family: NanumSquareRound;
   font-size: 12px;

@@ -90,7 +90,7 @@ export default function Article() {
       });
 
   }, [paper_id]);
-  
+
   // 좋아요, 싫어요 상태
   const [good, setGood] = useState(false);
   const [goodValue, setGoodValue] = useState(0);
@@ -134,7 +134,7 @@ export default function Article() {
         fetch(`https://scholub.misile.xyz/${paper_id}/comment`)
           .then(response => response.json())
           .then(data => {
-            
+
           })
           .catch(error => {
             console.error("Error fetching comments:", error);
@@ -239,7 +239,29 @@ export default function Article() {
             <BookmarkButton
               $fill={bookmark ? '#F7971D1A' : '#8D8D8D1A'}
               $textColor={bookmark ? '#F7971D' : '#7E7E7E'}
-              onClick={() => setBookmark(!bookmark)}
+              onClick={() => {
+                setBookmark(!bookmark);
+
+                fetch(`https://scholub.misile.xyz/post/${paper_id}/bookmark`, {
+                  method: 'POST',
+                  headers: {
+                  'Content-Type': 'application/json',
+                  'token': sessionStorage.getItem('token') || ''
+                  }
+                })
+                .then(response => {
+                  if (!response.ok) {
+                  throw new Error('Bookmark request failed');
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  console.log('Bookmark updated:', data);
+                })
+                .catch(error => {
+                  console.error('Error updating bookmark:', error);
+                });
+              }}
               style={{ cursor: "pointer" }}
             >
               <Bookmark $fill={bookmark ? '#F7971D' : '#7E7E7E'} />

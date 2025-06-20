@@ -25,15 +25,15 @@ export default function ArticleList() {
         fetch("https://scholub.misile.xyz/post")
             .then((response) => response.json())
             .then((data) => {
-                setArticles([
-                    {
-                        paper_id: data[0].paper_id,
-                        title: data[0].title,
-                        subTitle: data[0].description,
-                        imgUrl: `https://scholub.misile.xyz/files/post/${data[0].paper_id}/IMAGE_PLACEHOLDER_URL_1.png`,
-                        category: data[0].category,
-                    },
-                ]);
+                setArticles(
+                    data.map((item: any) => ({
+                        paper_id: item.paper_id,
+                        title: item.title,
+                        subTitle: item.description,
+                        imgUrl: `https://scholub.misile.xyz/files/post/${item.paper_id}/IMAGE_PLACEHOLDER_URL_1.png`,
+                        category: item.category,
+                    }))
+                );
             })
             .catch((error) => {
                 console.error("Error fetching articles:", error);

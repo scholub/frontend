@@ -1,10 +1,10 @@
 import { styled } from "styled-components"
 import Header from "~/components/Header"
 import ChipGroup from "~/components/ChipGroup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Register() {
-
+  const [token, setToken] = useState("");
   const [selectedChips, setSelectedChips] = useState<string[]>([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,6 +12,10 @@ export default function Register() {
   const [nickname, setNickname] = useState("");
   const [birthdate, setBirthdate] = useState("");
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    
+  }, [token]);
 
 
   return (
@@ -43,7 +47,7 @@ export default function Register() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                   />
-                  <EmailAuthButton onClick={() => {
+                  {token? <EmailAuthButton disabled style={{backgroundColor: 'gray'}}>인증완료</EmailAuthButton>:<EmailAuthButton onClick={() => {
                     console.log("이메일 인증 요청:", email);
                     const ws = new WebSocket("https://scholub.misile.xyz/user/register");
                     ws.onopen = () => {
@@ -52,12 +56,21 @@ export default function Register() {
                     ws.onmessage = (event) => {
                       const data = JSON.parse(event.data);
                       console.log("웹소켓 메시지 수신:", data);
+                        if (data.status === 409) {
+                          alert("이미 등록된 이메일입니다.");
+                        } else if (data.status === 400) {
+                          alert("잘못된 이메일 형식입니다.");
+                        } else if (data.status === 200) {
+                          setToken(data.data || "");
+                        } else {
+                        alert("알 수 없는 오류가 발생했습니다.");
+                        }
                     };
-                    ws.onerror = () => {
+                    ws.onerror = () => {  
                       console.log("웹소켓 연결에 실패했습니다.");
                     };
                     //TODO: 이메일 인증 로직 추가
-                  }}>인증하기</EmailAuthButton>
+                  }}>인증하기</EmailAuthButton>}
                 </EmailAuthContainer>
               </TextInputContainer>
               <TextInputContainer>
@@ -112,7 +125,31 @@ export default function Register() {
             </Container>
           </div>
 
-          <Submit>
+          <Submit onClick={() => {
+            fetch("https://scholub.misile.xyz/user/register", {
+              method: "POST",
+              headers: {
+              "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+              token: token,
+              name: nickname,
+              password: password,
+              }),
+            })
+              .then((response) => {
+              if (!response.ok) {
+                throw new Error("Failed to register");
+              }
+              return response.json();
+              })
+              .then((data) => {
+              console.log("Registration successful:", data);
+              })
+              .catch((error) => {
+              console.error("Error registering user:", error);
+              });
+          }}>
             <Text
               style={{
                 color: "#FFF",
@@ -122,7 +159,7 @@ export default function Register() {
                 lineHeight: "normal",
               }}
             >
-              로그인
+              회원가입
             </Text>
           </Submit>
         </CenterFlex>

@@ -55,7 +55,6 @@ export default function Header(props: HeaderProps) {
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    console.log("Token:", token);
     fetch("https://scholub.misile.xyz/user/verify", {
       method: 'GET',
       headers: {
@@ -71,7 +70,6 @@ export default function Header(props: HeaderProps) {
       return response.json();
       })
       .then((data) => {
-      console.log("User verified:", data);
       })
       .catch((error) => {
       console.error("Error verifying user:", error);

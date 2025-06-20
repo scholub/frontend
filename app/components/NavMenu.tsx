@@ -65,7 +65,7 @@ export default function NavMenu(props:Props) {
       <MenuContainer id="sidebar" ref={outside} className={props.isOpen ? 'open' : ''}>
         <ProfileBox>
           <UserBox>
-            <ProfileImg/>
+            <ProfileImg src={"https://dcimg1.dcinside.com/viewimage.php?id=2eb2dd2fe6ed36a379eb&no=24b0d769e1d32ca73fe983fa11d028318cb15ad56bfd98ec49f9ade75ba108bc917c09b7ae387c60dd518a2de75a860beae82c72508ae912d431ee34b6d91f501a254a7f87b12b31ff7886e541627579ca98d730882fbc"} />
             <Name>{props.name}</Name>
           </UserBox>
           <MyPage>마이페이지</MyPage>
@@ -126,6 +126,7 @@ const ProfileImg = styled.img`
   aspect-ratio: 1/1;
   border-radius: 32px;
   border: 1px solid rgba(50, 47, 41, 0.20);
+  object-fit: cover;
 `
 const UserBox = styled.div`
   display: flex;

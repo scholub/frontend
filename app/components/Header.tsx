@@ -91,7 +91,6 @@ export default function Header(props: HeaderProps) {
             {isMobile&&
               <MenuButton onClick={()=>{
                 setIsMenuOpen(true);
-                console.log("메뉴 열림");
               }}>
                 <MenuButtonSvg style={{ cursor: 'pointer' }} />
               </MenuButton>
@@ -114,7 +113,7 @@ export default function Header(props: HeaderProps) {
                   <SignInButton href={'register'}>회원가입</SignInButton></>}
               </AuthContainer>
           </NavBar>
-        <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'유이'}/>
+        <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'페른'}/>
       </HeaderContainer>
   );
 };

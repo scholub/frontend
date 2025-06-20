@@ -48,26 +48,22 @@ export default function Register() {
                     onChange={e => setEmail(e.target.value)}
                   />
                   {token? <EmailAuthButton disabled style={{backgroundColor: 'gray'}}>인증완료</EmailAuthButton>:<EmailAuthButton onClick={() => {
-                    console.log("이메일 인증 요청:", email);
                     const ws = new WebSocket("https://scholub.misile.xyz/user/register");
                     ws.onopen = () => {
                       ws.send(email);
                     };
                     ws.onmessage = (event) => {
                       const data = JSON.parse(event.data);
-                      console.log("웹소켓 메시지 수신:", data);
                         if (data.status === 409) {
                           alert("이미 등록된 이메일입니다.");
                         } else if (data.status === 400) {
                           alert("잘못된 이메일 형식입니다.");
                         } else if (data.status === 200) {
+                          alert("이메일 인증이 발송되었습니다.");
                           setToken(data.data || "");
                         } else {
                         alert("알 수 없는 오류가 발생했습니다.");
                         }
-                    };
-                    ws.onerror = () => {  
-                      console.log("웹소켓 연결에 실패했습니다.");
                     };
                     //TODO: 이메일 인증 로직 추가
                   }}>인증하기</EmailAuthButton>}
@@ -144,7 +140,6 @@ export default function Register() {
               return response.json();
               })
               .then((data) => {
-              console.log("Registration successful:", data);
               })
               .catch((error) => {
               console.error("Error registering user:", error);

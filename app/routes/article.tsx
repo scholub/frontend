@@ -134,7 +134,7 @@ export default function Article() {
         fetch(`https://scholub.misile.xyz/${paper_id}/comment`)
           .then(response => response.json())
           .then(data => {
-            console.log("댓글 데이터:", data);
+            
           })
           .catch(error => {
             console.error("Error fetching comments:", error);

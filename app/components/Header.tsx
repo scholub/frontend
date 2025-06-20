@@ -114,7 +114,7 @@ export default function Header(props: HeaderProps) {
                     }
                   }>로그아웃</LoginButton></>:
                   <><LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
-                  <SignInButton href={'register'}>회원가입</SignInButton></>}
+                  <SignInButton href={'/register'}>회원가입</SignInButton></>}
               </AuthContainer>
           </NavBar>
         <NavMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} name={'페른'} isLogin={isLogin} />

@@ -70,8 +70,8 @@ export default function NavMenu(props:Props) {
             <Name>{props.name}</Name>
           </UserBox>}
           {!props.isLogin ? (<div style={{display: 'flex', gap: '10px'}}>
-            <MyPage href="login">로그인</MyPage>
-            <MyPage href="register">회원가입</MyPage>
+            <MyPage href="/login">로그인</MyPage>
+            <MyPage href="/register">회원가입</MyPage>
           </div>):(
             <div style={{display: 'flex', gap: '10px'}}>
               <MyPage>마이페이지</MyPage>

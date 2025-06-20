@@ -108,7 +108,12 @@ export default function Header(props: HeaderProps) {
               </MenuContainer>
               <AuthContainer>
                 {isLogin?
-                  <MyPage>마이페이지</MyPage>:
+                  <><MyPage>마이페이지</MyPage><LoginButton onClick={
+                    () => {
+                      sessionStorage.removeItem("token");
+                      window.location.href = '/';
+                    }
+                  }>로그아웃</LoginButton></>:
                   <><LoginButton onClick={() => window.location.href = '/login'}>로그인</LoginButton>
                   <SignInButton href={'register'}>회원가입</SignInButton></>}
               </AuthContainer>

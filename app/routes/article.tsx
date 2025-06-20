@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ArticleMarkdown from "~/components/ArticleMarkdown";
-import {useEffect, useState, useRef} from "react";
+import { useState, useRef, useMemo} from "react";
 import ColBanner from "~/components/ColBanner";
 import Header from "~/components/Header";
 import GoodSvg from '~/asset/icon/good.svg?react'
@@ -9,9 +9,10 @@ import ShareSvg from '~/asset/icon/share.svg?react'
 import BookmarkSvg from '~/asset/icon/bookmark.svg?react'
 import CommentItem, {type CommentItemProps} from "~/components/CommentItem";
 import {useParams} from "react-router";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPostById, getPostMarkdownById } from "~/apis/posts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteBookmark, getPostById, getPostCommentsById, getPostMarkdownById, postBookmark, postComment } from "~/apis/posts";
 import { deleteReaction, getReaction, postReaction } from "~/apis/reaction";
+import { getUserData } from "~/apis/uesrs";
 
 function formatDate(date: Date) {
   return date.toLocaleString("ko-KR", {
@@ -36,62 +37,21 @@ interface ArticleData {
 export default function Article() {
   const queryClient = useQueryClient();
   const { paper_id } = useParams<{ paper_id: string }>();
-  const [bookmark, setBookmark] = useState(false);
   const [comments, setComments] = useState<CommentItemProps[] | null>(null);
   const [commentInput, setCommentInput] = useState('');
   const [isComposing, setIsComposing] = useState(false);
   const commentRef = useRef<HTMLDivElement>(null);
 
-  const { data: articleData, isLoading } = useQuery({queryKey: ['articleData', paper_id], queryFn: () => paper_id ? getPostById(paper_id) : Promise.resolve(null) });
+  const {data: articleData, isLoading } = useQuery({queryKey: ['articleData', paper_id], queryFn: () => paper_id ? getPostById(paper_id) : Promise.resolve(null) });
   const {data: content, isLoading: contentLoading } = useQuery({queryKey: ['articleContent', paper_id], queryFn: () => paper_id ? getPostMarkdownById(paper_id) : Promise.resolve(null) });
   const {data: reactionData} = useQuery({queryKey: ['reactionData', paper_id], queryFn: () => paper_id ? getReaction(paper_id) : Promise.resolve(null) });
+  const {data: commentData} = useQuery({queryKey: ['commentData', paper_id], queryFn: () => paper_id ? getPostCommentsById(paper_id) : Promise.resolve(null) });
+  const {data: userData} = useQuery({queryKey: ['userData'], queryFn: () => getUserData() });
 
-  const addComment = () => {
-    const content = commentInput.trim();
-    if (!content) return;
-
-    const newId = comments && comments.length > 0 ? comments[comments.length - 1].id + 1 : '1';
-    const newComment: CommentItemProps = {
-      id: newId,
-      profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s',
-      name: '유이',
-      time: '방금 전',
-      content,
-      email: 'current@example.com',
-      currentUserEmail: 'current@example.com',
-      likeCount: 0,
-      likedByCurrentUser: false,
-      dislikedByCurrentUser: false,
-      onDelete: () => {},
-    };
-
-    setComments(prev => prev ? [...prev, newComment] : [newComment]);
-    setCommentInput('');
-  };
-
-  useEffect(() => {
-    const loadComments = async () => {
-      let loaded = false;
-      const observer = new IntersectionObserver((entries) => {
-        if (!loaded && entries[0].isIntersecting) {
-          fetch(`https://scholub.misile.xyz/post/${paper_id}/comment`)
-            .then(response => response.json())
-            .then(data => {
-              //댓글 받아오세여
-            })
-            .catch(error => console.error("Error fetching comments:", error));
-
-          loaded = true;
-          observer.disconnect();
-        }
-      }, { threshold: 0.1 });
-
-      if (commentRef.current) observer.observe(commentRef.current);
-      return () => observer.disconnect();
-    };
-
-    loadComments();
-  }, []);
+  const bookmark = useMemo(() => {
+    if (!userData || !paper_id) return false;
+    return userData.bookmarks.includes(paper_id);
+  }, [userData, paper_id]); 
 
   const reactionType = {
     like: true,
@@ -99,7 +59,6 @@ export default function Article() {
     null: null,
   }
  
-
   const handleReactionMutation = useMutation({
     mutationFn: (reaction: 'like' | 'dislike') => {
       if (!paper_id) throw new Error("Paper ID is required for reaction mutation");
@@ -146,12 +105,94 @@ export default function Article() {
     await handleReactionMutation.mutateAsync(reaction);
   };
 
-   if (isLoading || contentLoading) {
+  const handlePostCommentMutation = useMutation({
+    mutationFn: (content: string) => {
+      if (!paper_id) throw new Error("Paper ID is required for posting comment");
+      return postComment(paper_id, content);
+    },
+    onMutate: async (newCommentContent) => {
+      queryClient.cancelQueries({ queryKey: ['commentData', paper_id] });
+      const previousComments = queryClient.getQueryData<CommentItemProps[]>(['commentData', paper_id]);
+      const newComment: CommentItemProps = {
+        id: (comments && comments.length > 0 ? comments[comments.length - 1].id + 1 : 1).toString(),
+        profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s',
+        name: '유이',
+        time: '방금 전',
+        content: newCommentContent,
+        email: '',
+        currentUserEmail: '',
+        likeCount: 0,
+        likedByCurrentUser: false,
+        dislikedByCurrentUser: false,
+          onDelete: () => {}
+      };
+
+      queryClient.setQueryData(['commentData', paper_id], (old: CommentItemProps[] | undefined) => {
+        return old ? [...old, newComment] : [newComment];
+      });
+      return { previousComments };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(['commentData', paper_id], context?.previousComments);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['commentData', paper_id] });
+    },
+  });
+
+  const addComment = async () => {
+    if (commentInput.trim() === '') return;
+    await handlePostCommentMutation.mutateAsync(commentInput);
+    setCommentInput('');
+    commentRef.current?.scrollTo(0, commentRef.current.scrollHeight);
+  };
+
+  const updateBookmarkState = (bookmarks: string[], paperId: string) => {
+    if (bookmarks.includes(paperId)) {
+      return bookmarks.filter(id => id !== paperId);
+    } else {
+      return [...bookmarks, paperId];
+    }
+  };
+
+  const handleBookmarkMutation = useMutation({
+    mutationFn: () => {
+      if(bookmark) {
+        return deleteBookmark(paper_id!);
+      }
+      return postBookmark(paper_id!);
+    },
+    onMutate: async () => {
+      queryClient.cancelQueries({ queryKey: ['userData'] });
+      const previousUserData = queryClient.getQueryData(['userData']);
+      queryClient.setQueryData(['userData'], (old: any) => {
+        if (!old) return old;
+        return { ...old, bookmarks: updateBookmarkState(old.bookmarks, paper_id!) };
+      });
+
+      return { previousUserData };
+    },
+    onError: (_, __, context) => {
+      // Rollback the user data to its previous state
+      queryClient.setQueryData(['userData'], context?.previousUserData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userData', paper_id] });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['userData'] });
+    }
+  });
+
+  const handleClickBookmark = async () => {
+    await handleBookmarkMutation.mutateAsync();
+  };
+
+  if (isLoading || contentLoading) {
     return <div>로딩 중...</div>;
   } if (!articleData || !content) {
     return <div>게시글을 찾을 수 없습니다.</div>;
   }
-  
   return (
     <Screen>
       <Header />
@@ -190,29 +231,7 @@ export default function Article() {
             <BookmarkButton
               $fill={bookmark ? '#F7971D1A' : '#8D8D8D1A'}
               $textColor={bookmark ? '#F7971D' : '#7E7E7E'}
-              onClick={() => {
-                setBookmark(!bookmark);
-
-                fetch(`https://scholub.misile.xyz/post/${paper_id}/bookmark`, {
-                  method: 'POST',
-                  headers: {
-                  'Content-Type': 'application/json',
-                  'token': sessionStorage.getItem('token') || ''
-                  }
-                })
-                .then(response => {
-                  if (!response.ok) {
-                  throw new Error('Bookmark request failed');
-                  }
-                  return response.json();
-                })
-                .then(data => {
-                  console.log('Bookmark updated:', data);
-                })
-                .catch(error => {
-                  console.error('Error updating bookmark:', error);
-                });
-              }}
+              onClick={handleClickBookmark}
               style={{ cursor: "pointer" }}
             >
               <Bookmark $fill={bookmark ? '#F7971D' : '#7E7E7E'} />
@@ -235,8 +254,8 @@ export default function Article() {
             <CommentAddButton onClick={addComment}>등록</CommentAddButton>
           </CommentBox>
           <CommentLogBox ref={commentRef}>
-            {comments ? (
-              comments.map((comment) => (
+            {commentData ? (
+              commentData.map((comment: any) => (
                 <CommentItem
                   key={comment.id}
                   id={comment.id}
@@ -251,7 +270,7 @@ export default function Article() {
                   dislikedByCurrentUser={comment.dislikedByCurrentUser}
                   onDelete={() => {
                     if (confirm("삭제 하시겠습니까?"))
-                      setComments(comments.filter(c => c.id !== comment.id));
+                      setComments(comments as any[])?.filter(c => c.id !== comment.id);
                   }}
                 />
               ))

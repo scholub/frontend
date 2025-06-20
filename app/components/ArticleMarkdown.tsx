@@ -3,7 +3,24 @@ import remarkGfm from "remark-gfm";
 import styled from "styled-components";
 import remarkBreaks from "remark-breaks";
 
+const ImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
 
+  img {
+    width: 300px;
+    height: auto;
+    max-width: 800px;
+    max-height: 400px;
+    object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.20);
+    border-radius: 4px;
+
+  }
+`;
 
 interface ArticleMarkdownProps {
   content: string
@@ -15,12 +32,28 @@ export default function ArticleMarkdown(ArticleMarkdownProps: ArticleMarkdownPro
 
   return (
     <Wrapper>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          p: ({ node, children, ...props }) => {
+            if (!node) {
+              return <p {...props}>{children}</p>;
+            }
+            const isOnlyImage =
+              node?.children?.length === 1 &&
+              (node.children[0] as any).tagName === "img";
+            if (isOnlyImage) {
+              return <ImageWrapper {...props}>{children}</ImageWrapper>;
+            }
+            return <p {...props}>{children}</p>;
+          },
+        }}
+      >
         {fixedStrong}
       </ReactMarkdown>
     </Wrapper>
   );
-} 
+}
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,34 +62,33 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 14px;
   align-items: start;
-  font-weight: 400;
   line-height: 180%;
 
   h1 {
     margin: 0;
-    margin-top: 16px;
+
     padding: 0;
     font-size: 24px;
-    font-weight: 700;
-    color: #322F29;
+    font-weight: 800;
+    color:rgb(0, 0, 0);
   }
 
   h2 {
     margin: 0;
-    margin-top: 16px;
+
     padding: 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: #322F29;
+    font-size: 22px;
+    font-weight: 800;
+    color:rgb(0, 0, 0);
   }
 
   h3 {
     margin: 0;
-    margin-top: 16px;
+
     padding: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: #322F29;
+    font-size: 20px;
+    font-weight: 800;
+    color:rgb(0, 0, 0);
   }
 
   p {
@@ -64,6 +96,8 @@ const Wrapper = styled.div`
     padding: 0;
     font-size: 16px;
     line-height: 180%;
+    font-weight: 400;
+    color: #322F29;
   }
 
   ul {
@@ -83,18 +117,18 @@ const Wrapper = styled.div`
     margin-bottom: 10px;
   }
 
-  img {
-    display: flex;
-    justify-self: center;
-    width: 80%;
-    height: auto;
-    object-fit: cover;
-    max-height: 560px;
-  }
+  // img {
+  //   display: flex;
+  //   justify-self: center;
+  //   width: 80%;
+  //   height: auto;
+  //   object-fit: cover;
+  //   max-height: 400px;
+  // }
 
   strong {
-  font-family: 'NanumSquareRoundB';
-    // color: #ff0000;
+    font-family: 'NanumSquareRoundB';
+    color:rgb(0, 0, 0);
   }
 
   em {

@@ -9,6 +9,9 @@ import ShareSvg from '~/asset/icon/share.svg?react'
 import BookmarkSvg from '~/asset/icon/bookmark.svg?react'
 import CommentItem, {type CommentItemProps} from "~/components/CommentItem";
 import {useParams} from "react-router";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getPostById, getPostMarkdownById } from "~/apis/posts";
+import { deleteReaction, getReaction, postReaction } from "~/apis/reaction";
 
 function formatDate(date: Date) {
   return date.toLocaleString("ko-KR", {
@@ -29,84 +32,24 @@ interface ArticleData {
   dislike_count: number;
 }
 
+
 export default function Article() {
+  const queryClient = useQueryClient();
   const { paper_id } = useParams<{ paper_id: string }>();
-  const [articleData, setArticleData] = useState<ArticleData>({
-    title: '',
-    description: '',
-    paper_id: '',
-    category: '',
-    tag: '',
-    created: new Date(),
-    modified: new Date(),
-    like_count: 0,
-    dislike_count: 0,
-  });
-  const [content, setContent] = useState<string>('');
-
-  useEffect(() => {
-    if (!paper_id) return;
-    fetch(`https://scholub.misile.xyz/post/${paper_id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        fetch(`https://scholub.misile.xyz/files/post/${paper_id}/post.md`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.text();
-          })
-          .then((markdown) => {
-              const basePath = `https://scholub.misile.xyz/files/post/${paper_id}`;
-              const updatedMarkdown = markdown.replace(
-                /!\[image\]\(\/files\/post\/[^/]+\/([^)]+)\)/g,
-                (_, imagePath) => `![image](${basePath}/${imagePath})`
-              );
-              setContent(updatedMarkdown);
-          })
-          .catch((error) => {
-            console.error("Error fetching markdown content:", error);
-          });
-
-        setArticleData({
-          title: data.title,
-          description: data.description,
-          paper_id: data.paper_id,
-          category: data.category,
-          tag: data.tag,
-          created: data.created,
-          modified: data.modified,
-          like_count: data.like_count || 0,
-          dislike_count: data.dislike_count || 0,
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching article data:", error);
-      });
-
-  }, [paper_id]);
-
-  // 좋아요, 싫어요 상태
-  const [good, setGood] = useState(false);
-  const [goodValue, setGoodValue] = useState(0);
-  const [bad, setBad] = useState(false);
-  const [badValue, setBadValue] = useState(0);
   const [bookmark, setBookmark] = useState(false);
-  // 댓글 리스트 상태 관리
   const [comments, setComments] = useState<CommentItemProps[] | null>(null);
-  // 댓글 입력값 상태
   const [commentInput, setCommentInput] = useState('');
-  // 한글/IME 입력 조합 상태
   const [isComposing, setIsComposing] = useState(false);
-  // 댓글 추가 함수
+  const commentRef = useRef<HTMLDivElement>(null);
+
+  const { data: articleData, isLoading } = useQuery({queryKey: ['articleData', paper_id], queryFn: () => paper_id ? getPostById(paper_id) : Promise.resolve(null) });
+  const {data: content, isLoading: contentLoading } = useQuery({queryKey: ['articleContent', paper_id], queryFn: () => paper_id ? getPostMarkdownById(paper_id) : Promise.resolve(null) });
+  const {data: reactionData} = useQuery({queryKey: ['reactionData', paper_id], queryFn: () => paper_id ? getReaction(paper_id) : Promise.resolve(null) });
+
   const addComment = () => {
     const content = commentInput.trim();
     if (!content) return;
+
     const newId = comments && comments.length > 0 ? comments[comments.length - 1].id + 1 : '1';
     const newComment: CommentItemProps = {
       id: newId,
@@ -121,89 +64,97 @@ export default function Article() {
       dislikedByCurrentUser: false,
       onDelete: () => {},
     };
+
     setComments(prev => prev ? [...prev, newComment] : [newComment]);
     setCommentInput('');
   };
 
-  // 댓글 비동기 로딩 처리
-  const commentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let loaded = false;
-    const observer = new window.IntersectionObserver((entries) => {
-      if (!loaded && entries[0].isIntersecting) {
-        fetch(`https://scholub.misile.xyz/${paper_id}/comment`)
-          .then(response => response.json())
-          .then(data => {
+    const loadComments = async () => {
+      let loaded = false;
+      const observer = new IntersectionObserver((entries) => {
+        if (!loaded && entries[0].isIntersecting) {
+          fetch(`https://scholub.misile.xyz/post/${paper_id}/comment`)
+            .then(response => response.json())
+            .then(data => {
+              //댓글 받아오세여
+            })
+            .catch(error => console.error("Error fetching comments:", error));
 
-          })
-          .catch(error => {
-            console.error("Error fetching comments:", error);
-          });
+          loaded = true;
+          observer.disconnect();
+        }
+      }, { threshold: 0.1 });
 
-        setComments([
-          //임시 데이터
-          {
-            id: '2',
-            profile: 'https://randomuser.me/api/portraits/women/44.jpg',
-            name: '김영희',
-            time: '30분 전',
-            content: '공감돼요. 더 자주 업데이트 되면 좋겠어요!',
-            likeCount: 5,
-            email: 'kim@example.com',
-            currentUserEmail: 'current@example.com',
-            likedByCurrentUser: false,
-            dislikedByCurrentUser: false,
-            onDelete: () => {}
-          },
-          {
-            id: '3',
-            profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s',
-            name: '유이',
-            time: '방금 전',
-            content: '이 부분에 대해 좀 더 설명해주실 수 있나요?',
-            likeCount: 99999999999,
-            email: 'current@example.com',
-            currentUserEmail: 'current@example.com',
-            likedByCurrentUser: false,
-            dislikedByCurrentUser: false,
-            onDelete: () => {}
-          }
-        ]);
-        loaded = true;
-        observer.disconnect();
-      }
-    }, { threshold: 0.1 });
-    if (commentRef.current) observer.observe(commentRef.current);
-    return () => observer.disconnect();
+      if (commentRef.current) observer.observe(commentRef.current);
+      return () => observer.disconnect();
+    };
+
+    loadComments();
   }, []);
 
-  useEffect(() => {
-    if (good) {
-      setGoodValue(prev => prev + 1);
-      if (bad) {
-        setBad(false);
-        setBadValue(prev => Math.max(0, prev - 1));
-      }
-    } else {
-      setGoodValue(prev => Math.max(0, prev - 1));
-    }
-  }, [good]);
+  const reactionType = {
+    like: true,
+    dislike: false,
+    null: null,
+  }
+ 
 
-  useEffect(() => {
-    if (bad) {
-      setBadValue(prev => prev + 1);
-      if (good) {
-        setGood(false);
-        setGoodValue(prev => Math.max(0, prev - 1));
+  const handleReactionMutation = useMutation({
+    mutationFn: (reaction: 'like' | 'dislike') => {
+      if (!paper_id) throw new Error("Paper ID is required for reaction mutation");
+      if (reactionData === reactionType[reaction]) {
+        return deleteReaction(paper_id);
+      } else {
+        return postReaction(paper_id, reaction);
       }
-    } else {
-      setBadValue(prev => Math.max(0, prev - 1));
-    }
-  }, [bad]);
+    },
+    onMutate: (reaction) => {
+      queryClient.cancelQueries({ queryKey: ['articleData', paper_id] });
 
+      const previousArticleData = queryClient.getQueryData(['articleData', paper_id]);
+      queryClient.setQueryData(['articleData', paper_id], (old: ArticleData | undefined) => {
+        if (!old) return old;
+        const updatedData = { ...old };
+        if (reactionData === reactionType[reaction]) {
+          queryClient.setQueryData(['reactionData', paper_id], null);
+        }
+        if (reaction === 'like') {
+          updatedData.like_count += reactionData === reactionType.like ? -1 : 1;
+          if (reactionData === reactionType.dislike) updatedData.dislike_count -= 1;
+          queryClient.setQueryData(['reactionData', paper_id], reactionType.like);
+        } else if (reaction === 'dislike') {
+          updatedData.dislike_count += reactionData === reactionType.dislike ? -1 : 1;
+          if (reactionData === reactionType.like) updatedData.like_count -= 1;
+          queryClient.setQueryData(['reactionData', paper_id], reactionType.dislike);
+        }
+        return updatedData;
+      });
+
+      return { previousArticleData };
+    },
+    onError: (_, reaction, context) => {
+      queryClient.setQueryData(['articleData', paper_id], context?.previousArticleData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['articleData', paper_id] });
+      queryClient.invalidateQueries({ queryKey: ['reactionData', paper_id] });
+    },
+  });
+
+  const handleClickReaction = async (reaction: 'like' | 'dislike') => {
+    await handleReactionMutation.mutateAsync(reaction);
+  };
+
+   if (isLoading || contentLoading) {
+    return <div>로딩 중...</div>;
+  } if (!articleData || !content) {
+    return <div>게시글을 찾을 수 없습니다.</div>;
+  }
+  
   return (
     <Screen>
-      <Header/>
+      <Header />
       <Wrapper>
         <ArticleBox>
           <ArticleTitleBox>
@@ -215,27 +166,27 @@ export default function Article() {
             </DateBox>
             <Editor>AI 뉴스 에디터 작성</Editor>
           </ArticleTitleBox>
-          <Line/>
+          <Line />
           <ContentContainer>
-            <ArticleMarkdown content={content} />
+            <ArticleMarkdown content={content!} />
           </ContentContainer>
-          <Line/>
+          <Line />
           <FeedbackBox>
             <ButtonContainer>
               <FeedbackButtonBox>
                 <FeedbackTitle>쪼아요</FeedbackTitle>
-                <GoodButton $fill={good ? '#F7971D' : '#D9D9D9'} onClick={() => setGood(!good)}/>
-                <FeedbackValue>{goodValue}</FeedbackValue>
+                <GoodButton $fill={reactionData ? '#F7971D' : '#D9D9D9'} onClick={async () => await handleClickReaction('like')} />
+                <FeedbackValue>{articleData.like_count}</FeedbackValue>
               </FeedbackButtonBox>
               <FeedbackButtonBox>
                 <FeedbackTitle>시러요</FeedbackTitle>
-                <BadButton $fill={bad ? '#F7971D' : '#D9D9D9'} onClick={() => setBad(!bad)}/>
-                <FeedbackValue>{badValue}</FeedbackValue>
+                <BadButton $fill={reactionData === false ? '#F7971D' : '#D9D9D9'} onClick={async () => await handleClickReaction('dislike')} />
+                <FeedbackValue>{articleData.dislike_count}</FeedbackValue>
               </FeedbackButtonBox>
             </ButtonContainer>
           </FeedbackBox>
           <ActionBox>
-            <SendButton><ShareSvg/>공유하기</SendButton>
+            <SendButton><ShareSvg />공유하기</SendButton>
             <BookmarkButton
               $fill={bookmark ? '#F7971D1A' : '#8D8D8D1A'}
               $textColor={bookmark ? '#F7971D' : '#7E7E7E'}
@@ -268,9 +219,9 @@ export default function Article() {
               북마크
             </BookmarkButton>
           </ActionBox>
-          <Line/>
+          <Line />
           <CommentBox>
-            <ProfileImage src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s'}/>
+            <ProfileImage src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s'} />
             <CommentInput
               placeholder={"댓글을 남겨주세요!"}
               value={commentInput}
@@ -299,7 +250,7 @@ export default function Article() {
                   likedByCurrentUser={comment.likedByCurrentUser}
                   dislikedByCurrentUser={comment.dislikedByCurrentUser}
                   onDelete={() => {
-                    if(confirm("삭제 하시겠습니까?"))
+                    if (confirm("삭제 하시겠습니까?"))
                       setComments(comments.filter(c => c.id !== comment.id));
                   }}
                 />
@@ -309,8 +260,8 @@ export default function Article() {
             )}
           </CommentLogBox>
         </ArticleBox>
-        <ColBanner/>
-        </Wrapper>
+        <ColBanner />
+      </Wrapper>
     </Screen>
   );
 }

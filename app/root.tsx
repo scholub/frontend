@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import type { Route } from "./+types/root";
 import "./index.css";
@@ -14,6 +15,8 @@ import { ErrorBoundary } from "./components/ErrorBoundary"
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff" }
 ];
+
+const queryClient = new QueryClient();
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +28,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+          {children}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -34,5 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return  ( <QueryClientProvider client={queryClient}>
+    <Outlet />
+  </QueryClientProvider>);
 }

@@ -4,8 +4,9 @@ import LogoIcon from "../asset/icon/logoIcon.svg?react";
 import SearchSvg from "../asset/icon/search.svg?react";
 import MenuLineSvg from "../asset/icon/menuLine.svg?react";
 import MenuButtonSvg from "../asset/icon/menu.svg?react";
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 import NavMenu from "~/components/NavMenu";
+
 
 function useWindowWidth() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -51,6 +52,31 @@ export default function Header(props: HeaderProps) {
       setIsMobile(false);
     }
   }, [width]);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    console.log("Token:", token);
+    fetch("https://scholub.misile.xyz/user/verify", {
+      method: 'GET',
+      headers: {
+      'accept': 'application/json',
+      'token': token ? token : '',
+      },
+    })
+      .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to verify user");
+      }
+      setIsLogin(true);
+      return response.json();
+      })
+      .then((data) => {
+      console.log("User verified:", data);
+      })
+      .catch((error) => {
+      console.error("Error verifying user:", error);
+      });
+  }, []);
 
   return (
       <HeaderContainer>

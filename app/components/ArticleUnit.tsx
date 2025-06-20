@@ -43,8 +43,14 @@ const ArticleImg = styled.img`
   object-fit: cover;
 `
 const ArticleTitle = styled.span`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   align-self: stretch;
+  overflow: hidden;
   color: #322F29;
+  text-overflow: ellipsis;
+  font-family: NanumSquareRound;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;

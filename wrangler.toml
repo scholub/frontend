@@ -1,5 +1,0 @@
-name = "scholub"
-compatibility_date = "2025-06-20"
-
-[site]
-bucket = "./build/client"

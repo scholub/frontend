@@ -41,7 +41,7 @@ export default function Header(props: HeaderProps) {
     { name: '네트워크 및 통신', href: '' },
     { name: '인공지능', href: '/articleList' },
     { name: '데이터 과학', href: '' }];
-  
+
 
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function Header(props: HeaderProps) {
   return (
       <HeaderContainer>
           <SearchBarContainer>
-            <div style={{ width:116.057, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div>
               {isMobile
               ? <LogoIcon style={{ width: 28, height: 28, minWidth: 28, minHeight: 28, cursor: 'pointer' }} onClick={() => window.location.href = '/'}/>
               : <LogoTextSvg style={{ width: 116, height: 21, cursor: 'pointer' }} onClick={() => window.location.href = '/'} />}
@@ -230,7 +230,7 @@ const MenuSub = styled.a`
     border: none;
     background: none;
     cursor: pointer;
-    
+
 `
 const AuthContainer = styled.div`
     display: flex;

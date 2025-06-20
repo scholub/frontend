@@ -10,7 +10,7 @@ import BookmarkSvg from '~/asset/icon/bookmark.svg?react'
 import CommentItem, {type CommentItemProps} from "~/components/CommentItem";
 import {useParams} from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteBookmark, getPostById, getPostCommentsById, getPostMarkdownById, postBookmark, postComment } from "~/apis/posts";
+import { deleteBookmark, deleteComment, getPostById, getPostCommentsById, getPostMarkdownById, postBookmark, postComment } from "~/apis/posts";
 import { deleteReaction, getReaction, postReaction } from "~/apis/reaction";
 import { getUserData } from "~/apis/uesrs";
 
@@ -188,6 +188,26 @@ export default function Article() {
     await handleBookmarkMutation.mutateAsync();
   };
 
+  const deleteCommentMutation = useMutation({ 
+    mutationFn: (commentId: string) => {
+      return deleteComment(commentId);
+    },
+    onMutate: async (commentId) => {
+      queryClient.cancelQueries({ queryKey: ['commentData', paper_id] });
+      const previousComments = queryClient.getQueryData<CommentItemProps[]>(['commentData', paper_id]);
+      queryClient.setQueryData(['commentData', paper_id], (old: CommentItemProps[] | undefined) => {
+        return old ? old.filter(comment => comment.id !== commentId) : [];
+      });
+      return { previousComments };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(['commentData', paper_id], context?.previousComments);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['commentData', paper_id] });
+    },
+  });
+
   if (isLoading || contentLoading) {
     return <div>로딩 중...</div>;
   } if (!articleData || !content) {
@@ -260,17 +280,17 @@ export default function Article() {
                   key={comment.id}
                   id={comment.id}
                   profile={comment.profile}
-                  name={comment.name}
+                  name={comment.user.name}
                   time={comment.time}
                   content={comment.content}
-                  currentUserEmail={comment.currentUserEmail}
-                  email={comment.email}
+                  currentUserEmail={userData?.email}
+                  email={comment.user?.email}
                   likeCount={comment.likeCount ?? 0}
                   likedByCurrentUser={comment.likedByCurrentUser}
                   dislikedByCurrentUser={comment.dislikedByCurrentUser}
                   onDelete={() => {
                     if (confirm("삭제 하시겠습니까?"))
-                      setComments(comments as any[])?.filter(c => c.id !== comment.id);
+                      deleteCommentMutation.mutate(comment.id);
                   }}
                 />
               ))

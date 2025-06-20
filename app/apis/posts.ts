@@ -68,3 +68,17 @@ export const deleteBookmark = async (postId: string) => {
   }
   return response.json();
 };
+
+export const deleteComment = async (commentId: string) => {
+  const response = await fetch(`https://scholub.misile.xyz/comment/${commentId}`, {
+    method: "DELETE",
+    headers: {
+      "token": sessionStorage.getItem("token") ||   "",
+      "Content-Type": "application/json"
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Error deleting comment with ID ${commentId}: ${response.statusText}`);
+  }
+  return response.json();
+};

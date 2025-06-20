@@ -20,7 +20,7 @@ export default function Home() {
     fetch("https://scholub.misile.xyz/post")
       .then((response) => response.json())
       .then((data) => {
-        setArticles(data);
+        setArticles([...data].reverse());
       })
       .catch((error) => {
         console.error("Error fetching articles:", error);

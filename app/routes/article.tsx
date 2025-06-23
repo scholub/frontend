@@ -279,8 +279,9 @@ export default function Article() {
                 <CommentItem
                   key={comment.id}
                   id={comment.id}
-                  profile={comment.profile}
                   name={comment.user?.name}
+                  // profile={comment.profile}
+                  profile={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s'}
                   time={comment.time}
                   content={comment.content}
                   currentUserEmail={userData?.email}

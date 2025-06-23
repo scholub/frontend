@@ -18,7 +18,7 @@ export default function Home() {
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    fetch("https://scholub.misile.xyz/posts/like")
+    fetch("https://scholub.misile.xyz/post")
       .then((response) => response.json())
       .then((data) => {
         setLikeArticles([...data].reverse());

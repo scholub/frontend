@@ -44,7 +44,7 @@ export default function Article() {
 
   const {data: articleData, isLoading } = useQuery({queryKey: ['articleData', paper_id], queryFn: () => paper_id ? getPostById(paper_id) : Promise.resolve(null) });
   const {data: content, isLoading: contentLoading } = useQuery({queryKey: ['articleContent', paper_id], queryFn: () => paper_id ? getPostMarkdownById(paper_id) : Promise.resolve(null) });
-  const {data: reactionData} = useQuery({queryKey: ['reactionData', paper_id], queryFn: () => paper_id ? getReaction(paper_id) : Promise.resolve(null) });
+  const {data: reactionData} = useQuery({queryKey: ['reactionData', paper_id], queryFn: () => paper_id ? getReaction(paper_id) : Promise.resolve(null) },);
   const {data: commentData} = useQuery({queryKey: ['commentData', paper_id], queryFn: () => paper_id ? getPostCommentsById(paper_id) : Promise.resolve(null) });
   const {data: userData} = useQuery({queryKey: ['userData'], queryFn: () => getUserData() });
 
@@ -116,7 +116,7 @@ export default function Article() {
       const newComment: CommentItemProps = {
         id: (comments && comments.length > 0 ? comments[comments.length - 1].id + 1 : 1).toString(),
         profile: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s',
-        name: '유이',
+        name: "asdf",
         time: '방금 전',
         content: newCommentContent,
         email: '',
@@ -280,7 +280,7 @@ export default function Article() {
                   key={comment.id}
                   id={comment.id}
                   profile={comment.profile}
-                  name={comment.user.name}
+                  name={comment.user?.name}
                   time={comment.time}
                   content={comment.content}
                   currentUserEmail={userData?.email}

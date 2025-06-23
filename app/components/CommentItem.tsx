@@ -29,7 +29,7 @@ const CommentItem = ({
   likeCount,
   likedByCurrentUser,
   dislikedByCurrentUser
-}: CommentItemProps) => {
+}: CommentItemProps) =>{
   const [liked, setLiked] = useState(likedByCurrentUser);
   const [disliked, setDisliked] = useState(dislikedByCurrentUser);
 

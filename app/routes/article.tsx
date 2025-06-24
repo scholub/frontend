@@ -260,7 +260,7 @@ export default function Article() {
           </ActionBox>
           <Line />
           <CommentBox>
-            <ProfileImage src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s'} />
+            {userData &&(<><ProfileImage src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqXtvUw93BzewwknzouqY0JtoKUPNBDcXbuw&s'} />
             <CommentInput
               placeholder={"댓글을 남겨주세요!"}
               value={commentInput}
@@ -272,6 +272,7 @@ export default function Article() {
               }}
             />
             <CommentAddButton onClick={addComment}>등록</CommentAddButton>
+            </>)}
           </CommentBox>
           <CommentLogBox ref={commentRef}>
             {commentData ? (

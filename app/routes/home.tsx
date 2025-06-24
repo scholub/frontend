@@ -18,7 +18,7 @@ export default function Home() {
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    fetch("https://scholub.misile.xyz/post")
+    fetch("https://scholub.misile.xyz/post")  
       .then((response) => response.json())
       .then((data) => {
         setLikeArticles([...data].reverse());
@@ -80,7 +80,7 @@ export default function Home() {
     <ArticleRow>
       <ArticleBoadrTitle>🌟 오늘의 인기 논문!</ArticleBoadrTitle>
       <ArticleBoardContainer>
-        {likeArticles.slice(0,4).map((likeArticles, i) => (
+        {likeArticles.map((likeArticles, i) => (
           <ArticleUnit
             key={i}
             paper_id={likeArticles.paper_id}

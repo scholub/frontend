@@ -128,21 +128,35 @@ export default function Register() {
               "Content-Type": "application/json",
               },
               body: JSON.stringify({
-              token: token,
-              name: nickname,
-              password: password,
+                token: token,
+                name: nickname,
+                password: password,
               }),
             })
               .then((response) => {
-              if (!response.ok) {
-                throw new Error("Failed to register");
-              }
+                if (!response.ok) {
+                  if (response.status === 401) {
+                    alert("인증 과정에서 문제가 생겼습니다.")
+                  } else if (response.status === 400) {
+                    alert("비밀번호는 최소 8글자여야 합니다.")
+                  } else if (response.status === 409) {
+                    response.text().then((content)=>{
+                      if (content.includes('email must be unique.')) {
+                        alert("같은 이메일을 가진 유저가 존재합니다.")
+                      } else {
+                        alert("같은 이름을 가진 유저가 존재합니다.")
+                      }
+                    })
+                  } else {
+                    throw new Error("Failed to register");
+                  }
+                }
               return response.json();
               })
               .then((data) => {
               })
               .catch((error) => {
-              console.error("Error registering user:", error);
+                console.error("Error registering user:", error);
               });
           }}>
             <Text

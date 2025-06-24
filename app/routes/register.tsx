@@ -14,7 +14,7 @@ export default function Register() {
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    
+
   }, [token]);
 
 
@@ -51,6 +51,7 @@ export default function Register() {
                     const ws = new WebSocket("https://scholub.misile.xyz/user/register");
                     ws.onopen = () => {
                       ws.send(email);
+                      alert("인증 이메일이 발송되었습니다.");
                     };
                     ws.onmessage = (event) => {
                       const data = JSON.parse(event.data);
@@ -59,13 +60,12 @@ export default function Register() {
                         } else if (data.status === 400) {
                           alert("잘못된 이메일 형식입니다.");
                         } else if (data.status === 200) {
-                          alert("이메일 인증이 발송되었습니다.");
+                          alert("이메일 인증이 완료되었습니다.");
                           setToken(data.data || "");
                         } else {
                         alert("알 수 없는 오류가 발생했습니다.");
                         }
                     };
-                    //TODO: 이메일 인증 로직 추가
                   }}>인증하기</EmailAuthButton>}
                 </EmailAuthContainer>
               </TextInputContainer>

@@ -10,6 +10,7 @@ export function meta() {
     { title: "Scholub" },
     { name: "description", content: "Welcome to React Router!" },
   ];
+
 }
 
 export default function Home() {

@@ -6,6 +6,7 @@ import MenuLineSvg from "../asset/icon/menuLine.svg?react";
 import MenuButtonSvg from "../asset/icon/menu.svg?react";
 import {useEffect, useState} from "react";
 import NavMenu from "~/components/NavMenu";
+import { getToken, removeToken } from "../apis/utils";
 
 
 function useWindowWidth() {
@@ -53,7 +54,7 @@ export default function Header(props: HeaderProps) {
   }, [width]);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = getToken();
     fetch("https://scholub.misile.xyz/user/verify", {
       method: 'GET',
       headers: {
@@ -111,7 +112,7 @@ export default function Header(props: HeaderProps) {
                 {isLogin?
                   <><MyPage>마이페이지</MyPage><LoginButton onClick={
                     () => {
-                      sessionStorage.removeItem("token");
+                      removeToken();
                       window.location.href = '/';
                     }
                   }>로그아웃</LoginButton></>:

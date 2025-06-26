@@ -3,6 +3,7 @@ import Header from "~/components/Header";
 import RowBanner from "~/components/RowBanner";
 import ArticleUnit, {type ArticleListProps} from "~/components/ArticleUnit";
 import { useEffect, useState } from "react";
+import { getToken } from "../apis/utils";
 
 
 export function meta() {
@@ -19,7 +20,7 @@ export default function Home() {
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    fetch("https://scholub.misile.xyz/post")  
+    fetch("https://scholub.misile.xyz/post")
       .then((response) => response.json())
       .then((data) => {
         setLikeArticles([...data].reverse());
@@ -30,7 +31,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = getToken();
     if (token) {
       fetch("https://scholub.misile.xyz/posts/recommend", {
         method: "GET",
@@ -49,7 +50,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = getToken();
     if (token) {
       fetch("https://scholub.misile.xyz/user/verify", {
         method: "GET",

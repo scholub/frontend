@@ -12,8 +12,9 @@ export default function Register() {
   const [nickname, setNickname] = useState("");
   const [birthdate, setBirthdate] = useState("");
 
+  import { getToken } from "../apis/utils";
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = getToken();
 
   }, [token]);
 

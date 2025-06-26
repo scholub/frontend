@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from "styled-components";
 import {useEffect, useRef} from "react";
+import { removeToken } from "../apis/utils";
 
 interface Props {
   isOpen: boolean;
@@ -76,7 +77,7 @@ export default function NavMenu(props:Props) {
             <div style={{display: 'flex', gap: '10px'}}>
               <MyPage>마이페이지</MyPage>
               <MyPage onClick={() => {
-                sessionStorage.removeItem("token");
+                removeToken();
                 window.location.href = '/';
               }}>로그아웃</MyPage>
             </div>

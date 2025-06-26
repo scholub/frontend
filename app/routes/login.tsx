@@ -11,6 +11,8 @@ export default function Login() {
   const [remember, setRemember] = useState(false);
 
 
+import { setToken } from "../apis/utils";
+
   async function login() {
 
     if (email === "" || password === "") { alert("이메일과 비밀번호를 입력해주세요."); return; }
@@ -31,8 +33,7 @@ export default function Login() {
 
     if (res.status === 200) {
       const data = await res.json();
-      if (remember) { localStorage.setItem("token", data); }
-      else { sessionStorage.setItem("token", data); }
+      setToken(data, remember);
       window.location.href = "/";
     }
     else if (res.status === 401) { alert("이메일 또는 비밀번호가 잘못되었습니다."); }

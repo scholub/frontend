@@ -2,6 +2,7 @@ import { styled } from "styled-components"
 import Header from "~/components/Header"
 import ChipGroup from "~/components/ChipGroup";
 import { useState, useEffect } from "react";
+import { getToken } from "../apis/utils";
 
 export default function Register() {
   const [token, setToken] = useState("");
@@ -12,10 +13,8 @@ export default function Register() {
   const [nickname, setNickname] = useState("");
   const [birthdate, setBirthdate] = useState("");
 
-  import { getToken } from "../apis/utils";
   useEffect(() => {
     const token = getToken();
-
   }, [token]);
 
 

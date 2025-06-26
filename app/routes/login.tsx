@@ -3,6 +3,7 @@ import { styled } from "styled-components"
 import Header from "~/components/Header"
 import CheckBox from "~/components/CheckBox";
 import { serverAddress } from "../consts/backend";
+import { setToken } from "../apis/utils";
 
 export default function Login() {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -10,15 +11,11 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
 
-
-import { setToken } from "../apis/utils";
-
   async function login() {
 
     if (email === "" || password === "") { alert("이메일과 비밀번호를 입력해주세요."); return; }
     if (password.length < 8) { alert("비밀번호는 8자 이상이어야 합니다."); return; }
     if (!emailRegex.test(email)) { alert("이메일 형식이 잘못되었습니다."); return; }
-
 
     const res = await fetch(serverAddress + "/user/login", {
       method: "POST",

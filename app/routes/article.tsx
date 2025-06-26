@@ -222,7 +222,7 @@ export default function Article() {
             <Category>{articleData.category}</Category>
             <Title>{articleData.title}</Title>
             <DateBox>
-              <DateView>{formatDate(articleData.created)}</DateView>
+              {/*<DateView>{formatDate(articleData.created)}</DateView>*/}
               <DateView>{formatDate(articleData.modified)}</DateView>
             </DateBox>
             <Editor>AI 뉴스 에디터 작성</Editor>

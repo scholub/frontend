@@ -14,8 +14,8 @@ import { deleteBookmark, deleteComment, getPostById, getPostCommentsById, getPos
 import { deleteReaction, getReaction, postReaction } from "~/apis/reaction";
 import { getUserData } from "~/apis/uesrs";
 
-function formatDate(date: Date) {
-  return date.toLocaleString("ko-KR", {
+function formatDate(date: string) {
+  return new Date(date).toLocaleString("ko-KR", {
     dateStyle: "medium",
     timeStyle: "short",
   });
@@ -51,14 +51,14 @@ export default function Article() {
   const bookmark = useMemo(() => {
     if (!userData || !paper_id) return false;
     return userData.bookmarks.includes(paper_id);
-  }, [userData, paper_id]); 
+  }, [userData, paper_id]);
 
   const reactionType = {
     like: true,
     dislike: false,
     null: null,
   }
- 
+
   const handleReactionMutation = useMutation({
     mutationFn: (reaction: 'like' | 'dislike') => {
       if (!paper_id) throw new Error("Paper ID is required for reaction mutation");
@@ -188,7 +188,7 @@ export default function Article() {
     await handleBookmarkMutation.mutateAsync();
   };
 
-  const deleteCommentMutation = useMutation({ 
+  const deleteCommentMutation = useMutation({
     mutationFn: (commentId: string) => {
       return deleteComment(commentId);
     },

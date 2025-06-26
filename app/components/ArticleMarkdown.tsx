@@ -16,19 +16,23 @@ const ImageWrapper = styled.div`
     max-width: 800px;
     max-height: 400px;
     object-fit: cover;
-    border: 1px solid rgba(0, 0, 0, 0.20);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-
   }
 `;
 
 interface ArticleMarkdownProps {
-  content: string
+  content: string;
 }
 
-export default function ArticleMarkdown(ArticleMarkdownProps: ArticleMarkdownProps) {
+export default function ArticleMarkdown(
+  ArticleMarkdownProps: ArticleMarkdownProps,
+) {
   const parsedMarkdown = ArticleMarkdownProps.content.replace(/\\n/g, "\n");
-  const fixedStrong = parsedMarkdown.replace(/\*\*([^*]+?\([^)]+\))\*\*(?=\S)/g,'**$1** ');
+  const fixedStrong = parsedMarkdown.replace(
+    /\*\*([^*]+?\([^)]+\))\*\*(?=\S)/g,
+    "**$1** ",
+  );
 
   return (
     <Wrapper>
@@ -70,7 +74,7 @@ const Wrapper = styled.div`
     padding: 0;
     font-size: 24px;
     font-weight: 800;
-    color:rgb(0, 0, 0);
+    color: rgb(0, 0, 0);
   }
 
   h2 {
@@ -79,7 +83,7 @@ const Wrapper = styled.div`
     padding: 0;
     font-size: 22px;
     font-weight: 800;
-    color:rgb(0, 0, 0);
+    color: rgb(0, 0, 0);
   }
 
   h3 {
@@ -88,7 +92,7 @@ const Wrapper = styled.div`
     padding: 0;
     font-size: 20px;
     font-weight: 800;
-    color:rgb(0, 0, 0);
+    color: rgb(0, 0, 0);
   }
 
   p {
@@ -97,7 +101,7 @@ const Wrapper = styled.div`
     font-size: 16px;
     line-height: 180%;
     font-weight: 400;
-    color: #322F29;
+    color: #322f29;
   }
 
   ul {
@@ -110,7 +114,7 @@ const Wrapper = styled.div`
   }
 
   blockquote {
-    border-left: 4px solid #F7971D;
+    border-left: 4px solid #f7971d;
     padding-left: 12px;
     color: #666;
     font-style: italic;
@@ -127,20 +131,20 @@ const Wrapper = styled.div`
   // }
 
   strong {
-    font-family: 'NanumSquareRoundB';
-    color:rgb(0, 0, 0);
+    font-family: "NanumSquareRoundB";
+    color: rgb(0, 0, 0);
   }
 
   em {
     font-style: italic;
-    color: #322F29;
+    color: #322f29;
   }
-    pre {
+  pre {
     background-color: #23272f;
     color: #ffffff;
     padding: 30px;
     border-radius: 10px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Courier New", Courier, monospace;
     overflow-x: auto;
     font-size: 1em;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
@@ -155,5 +159,4 @@ const Wrapper = styled.div`
     font-size: inherit;
     padding: 0;
   }
-
 `;

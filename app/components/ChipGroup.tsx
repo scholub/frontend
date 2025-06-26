@@ -7,10 +7,14 @@ interface ChipGroupProps {
   onChange: (selected: string[]) => void;
 }
 
-export default function ChipGroup({ options, selectedList, onChange }: ChipGroupProps) {
+export default function ChipGroup({
+  options,
+  selectedList,
+  onChange,
+}: ChipGroupProps) {
   const toggleChip = (label: string) => {
     if (selectedList.includes(label)) {
-      onChange(selectedList.filter(item => item !== label));
+      onChange(selectedList.filter((item) => item !== label));
     } else {
       onChange([...selectedList, label]);
     }
@@ -18,7 +22,7 @@ export default function ChipGroup({ options, selectedList, onChange }: ChipGroup
 
   return (
     <Wrapper>
-      {options.map(label => (
+      {options.map((label) => (
         <Chip
           key={label}
           label={label}
@@ -31,8 +35,8 @@ export default function ChipGroup({ options, selectedList, onChange }: ChipGroup
 }
 
 const Wrapper = styled.div`
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  align-self: stretch;
 `;

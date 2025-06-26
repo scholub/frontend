@@ -17,7 +17,10 @@ interface HandleReactionMutationParams {
   reactionData: "like" | "dislike" | null;
 }
 
-export function useHandleReactionMutation({ paper_id, reactionData }: HandleReactionMutationParams) {
+export function useHandleReactionMutation({
+  paper_id,
+  reactionData,
+}: HandleReactionMutationParams) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (reaction: "like" | "dislike") => {
@@ -31,7 +34,10 @@ export function useHandleReactionMutation({ paper_id, reactionData }: HandleReac
     },
     onMutate: async (reaction) => {
       await queryClient.cancelQueries({ queryKey: ["articleData", paper_id] });
-      const previousArticleData = queryClient.getQueryData(["articleData", paper_id]);
+      const previousArticleData = queryClient.getQueryData([
+        "articleData",
+        paper_id,
+      ]);
       queryClient.setQueryData(
         ["articleData", paper_id],
         (old: ArticleData | undefined) => {
@@ -45,14 +51,14 @@ export function useHandleReactionMutation({ paper_id, reactionData }: HandleReac
             if (reactionData === "like") updatedData.like_count -= 1;
           }
           return updatedData;
-        }
+        },
       );
       return { previousArticleData };
     },
     onError: (err, reaction, context) => {
       queryClient.setQueryData(
         ["articleData", paper_id],
-        context?.previousArticleData
+        context?.previousArticleData,
       );
     },
     onSettled: () => {

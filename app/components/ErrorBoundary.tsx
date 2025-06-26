@@ -1,6 +1,4 @@
-import {
-  isRouteErrorResponse,
-} from "react-router";
+import { isRouteErrorResponse } from "react-router";
 import type { Route } from "../+types/root";
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

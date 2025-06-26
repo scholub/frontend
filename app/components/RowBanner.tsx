@@ -1,14 +1,17 @@
 import styled from "styled-components";
-import img from "../asset/img/bannerImg.png"
+import img from "../asset/img/bannerImg.png";
 
-
-export default function RowBanner(){
+export default function RowBanner() {
   return (
     <BannerContainer>
-      <img src={img} alt={'배너 이미지'} style={{width:"100%", borderRadius:"10px"}} />
+      <img
+        src={img}
+        alt={"배너 이미지"}
+        style={{ width: "100%", borderRadius: "10px" }}
+      />
     </BannerContainer>
   );
-};
+}
 
 const BannerContainer = styled.div`
   display: flex;
@@ -18,6 +21,4 @@ const BannerContainer = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-`
-
-
+`;

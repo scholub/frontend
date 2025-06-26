@@ -13,22 +13,22 @@ const CheckBoxInput = styled.input.attrs({ type: "checkbox" })`
   position: relative;
 
   &:checked {
-    background-color: #F7971D;
-    border-color: #F7971D;
+    background-color: #f7971d;
+    border-color: #f7971d;
   }
 
   &::after {
-  content: '';
-  position: absolute;
-  top: 0.5px;
-  left: 4.5px;
-  width: 6px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  opacity: 0;
-  transform: rotate(45deg);
-}
+    content: "";
+    position: absolute;
+    top: 0.5px;
+    left: 4.5px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    opacity: 0;
+    transform: rotate(45deg);
+  }
   &:checked::after {
     opacity: 1;
   }
@@ -43,7 +43,7 @@ export default function CheckBox(props: CheckBoxProps) {
     <CheckBoxInput
       {...props}
       checked={checked}
-      onChange={e => {
+      onChange={(e) => {
         setChecked(e.target.checked);
         props.onChange?.(e);
       }}

@@ -1,8 +1,8 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import ThmbUp from "../asset/icon/thumb_up.svg?react"
-import ThmbDn from "../asset/icon/thumb_down.svg?react"
-import Delete from "../asset/icon/delete.svg?react"
+import ThmbUp from "../asset/icon/thumb_up.svg?react";
+import ThmbDn from "../asset/icon/thumb_down.svg?react";
+import Delete from "../asset/icon/delete.svg?react";
 
 export interface CommentItemProps {
   id: string;
@@ -28,14 +28,15 @@ const CommentItem = ({
   onDelete,
   likeCount,
   likedByCurrentUser,
-  dislikedByCurrentUser
-}: CommentItemProps) =>{
+  dislikedByCurrentUser,
+}: CommentItemProps) => {
   const [liked, setLiked] = useState(likedByCurrentUser);
   const [disliked, setDisliked] = useState(dislikedByCurrentUser);
 
   const canDelete = email === currentUserEmail;
 
-  const displayLike = likeCount + (liked ? 1 : 0) - (likedByCurrentUser ? 1 : 0);
+  const displayLike =
+    likeCount + (liked ? 1 : 0) - (likedByCurrentUser ? 1 : 0);
 
   return (
     <CommentItemBox>
@@ -57,7 +58,7 @@ const CommentItem = ({
                 }
               }}
             >
-              <ThmbUpStyled $fill={liked ? '#F7971D' : '#322F2999'} />
+              <ThmbUpStyled $fill={liked ? "#F7971D" : "#322F2999"} />
             </ActionButton>
             <LikeValue>{displayLike}</LikeValue>
           </LikeValueBox>
@@ -71,11 +72,11 @@ const CommentItem = ({
               }
             }}
           >
-            <ThmbDnStyled $fill={disliked ? '#F7971D' : '#322F2999'} />
+            <ThmbDnStyled $fill={disliked ? "#F7971D" : "#322F2999"} />
           </ActionButton>
           {canDelete && (
             <ActionButton onClick={onDelete}>
-              <DeleteStyled $fill={'#322F2999'} />
+              <DeleteStyled $fill={"#322F2999"} />
             </ActionButton>
           )}
         </Actions>
@@ -98,7 +99,7 @@ const ProfileImg = styled.img`
   height: 40px;
   aspect-ratio: 1/1;
   border-radius: 40px;
-  border: 1px solid rgba(50, 47, 41, 0.20);
+  border: 1px solid rgba(50, 47, 41, 0.2);
   object-fit: cover;
 `;
 
@@ -112,7 +113,7 @@ const NameTime = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #322F29;
+  color: #322f29;
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
@@ -120,7 +121,7 @@ const NameTime = styled.div`
 `;
 
 const Time = styled.span`
-  color: rgba(50, 47, 41, 0.60);
+  color: rgba(50, 47, 41, 0.6);
   font-size: 11px;
   font-style: normal;
   font-weight: 400;
@@ -128,7 +129,7 @@ const Time = styled.span`
 `;
 
 const Content = styled.span`
-  color: #322F29;
+  color: #322f29;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -154,15 +155,15 @@ const LikeValueBox = styled.div`
   justify-content: center;
   align-items: center;
   gap: 3px;
-`
+`;
 const LikeValue = styled.span`
-  color: #322F29;
+  color: #322f29;
   font-size: 11px;
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 15.4px */
   letter-spacing: -0.22px;
-`
+`;
 
 // Styled SVG components to apply path fill color
 const ThmbUpStyled = styled(ThmbUp)<{ $fill: string }>`

@@ -1,22 +1,22 @@
 import styled from "styled-components";
 import Header from "~/components/Header";
 import RowBanner from "~/components/RowBanner";
-import ArticleUnit, {type ArticleListProps} from "~/components/ArticleUnit";
+import ArticleUnit, { type ArticleListProps } from "~/components/ArticleUnit";
 import { useEffect, useState } from "react";
 import { getToken } from "../apis/utils";
-
 
 export function meta() {
   return [
     { title: "Scholub" },
     { name: "description", content: "Welcome to React Router!" },
   ];
-
 }
 
 export default function Home() {
-  const  [likeArticles, setLikeArticles] = useState<ArticleListProps[]>([]);
-  const  [recommendArticles, setRecommendArticles] = useState<ArticleListProps[]>([]);
+  const [likeArticles, setLikeArticles] = useState<ArticleListProps[]>([]);
+  const [recommendArticles, setRecommendArticles] = useState<
+    ArticleListProps[]
+  >([]);
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
@@ -36,8 +36,8 @@ export default function Home() {
       fetch("https://scholub.misile.xyz/posts/recommend", {
         method: "GET",
         headers: {
-          "token": token
-        }
+          token: token,
+        },
       })
         .then((response) => response.json())
         .then((data) => {
@@ -55,8 +55,8 @@ export default function Home() {
       fetch("https://scholub.misile.xyz/user/verify", {
         method: "GET",
         headers: {
-          "token": token
-        }
+          token: token,
+        },
       })
         .then((response) => {
           if (response.status === 200) {
@@ -73,55 +73,55 @@ export default function Home() {
     }
   }, []);
 
+  return (
+    <Screen>
+      <Header />
+      <RowBanner />
 
-
-  return <Screen>
-    <Header/>
-    <RowBanner />
-
-    <ArticleRow>
-      <ArticleBoadrTitle>🌟 오늘의 인기 논문!</ArticleBoadrTitle>
-      <ArticleBoardContainer>
-        {likeArticles.map((likeArticles, i) => (
-          <ArticleUnit
-            key={i}
-            paper_id={likeArticles.paper_id}
-            title={likeArticles.title}
-            description={likeArticles.description}
-            imgUrl={`https://scholub.misile.xyz/files/post/${likeArticles.paper_id}/IMAGE_PLACEHOLDER_URL_1.png`}
-            category={likeArticles.category}
-            tag={likeArticles.tag}
-            created={likeArticles.created}
-            modified={likeArticles.modified}
-            like_count={likeArticles.like_count}
-            dislike_count={likeArticles.dislike_count}
-          />
-        ))}
-      </ArticleBoardContainer>
-    </ArticleRow>
-    {isVerified && (
-    <ArticleRow>
-      <ArticleBoadrTitle>😋 맞춤 논문 추천</ArticleBoadrTitle>
-      <ArticleBoardContainer>
-        {recommendArticles.slice(0,4).map((recommendArticles, i) => (
-          <ArticleUnit
-            key={i}
-            paper_id={recommendArticles.paper_id}
-            title={recommendArticles.title}
-            description={recommendArticles.description}
-            imgUrl={`https://scholub.misile.xyz/files/post/${recommendArticles.paper_id}/IMAGE_PLACEHOLDER_URL_1.png`}
-            category={recommendArticles.category}
-            tag={recommendArticles.tag}
-            created={recommendArticles.created}
-            modified={recommendArticles.modified}
-            like_count={recommendArticles.like_count}
-            dislike_count={recommendArticles.dislike_count}
-          />
-        ))}
-      </ArticleBoardContainer>
-    </ArticleRow>
-    )}
-  </Screen>;
+      <ArticleRow>
+        <ArticleBoadrTitle>🌟 오늘의 인기 논문!</ArticleBoadrTitle>
+        <ArticleBoardContainer>
+          {likeArticles.map((likeArticles, i) => (
+            <ArticleUnit
+              key={i}
+              paper_id={likeArticles.paper_id}
+              title={likeArticles.title}
+              description={likeArticles.description}
+              imgUrl={`https://scholub.misile.xyz/files/post/${likeArticles.paper_id}/IMAGE_PLACEHOLDER_URL_1.png`}
+              category={likeArticles.category}
+              tag={likeArticles.tag}
+              created={likeArticles.created}
+              modified={likeArticles.modified}
+              like_count={likeArticles.like_count}
+              dislike_count={likeArticles.dislike_count}
+            />
+          ))}
+        </ArticleBoardContainer>
+      </ArticleRow>
+      {isVerified && (
+        <ArticleRow>
+          <ArticleBoadrTitle>😋 맞춤 논문 추천</ArticleBoadrTitle>
+          <ArticleBoardContainer>
+            {recommendArticles.slice(0, 4).map((recommendArticles, i) => (
+              <ArticleUnit
+                key={i}
+                paper_id={recommendArticles.paper_id}
+                title={recommendArticles.title}
+                description={recommendArticles.description}
+                imgUrl={`https://scholub.misile.xyz/files/post/${recommendArticles.paper_id}/IMAGE_PLACEHOLDER_URL_1.png`}
+                category={recommendArticles.category}
+                tag={recommendArticles.tag}
+                created={recommendArticles.created}
+                modified={recommendArticles.modified}
+                like_count={recommendArticles.like_count}
+                dislike_count={recommendArticles.dislike_count}
+              />
+            ))}
+          </ArticleBoardContainer>
+        </ArticleRow>
+      )}
+    </Screen>
+  );
 }
 
 const Screen = styled.div`
@@ -132,7 +132,7 @@ const Screen = styled.div`
   height: 100dvh;
   width: 100%;
   max-width: 1200px;
-`
+`;
 const ArticleBoardContainer = styled.div`
   display: grid;
   align-items: center;
@@ -140,11 +140,11 @@ const ArticleBoardContainer = styled.div`
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(273px, 1fr));
   gap: 50px 10px;
-`
+`;
 
 const ArticleBoadrTitle = styled.h1`
   margin: 0;
-  color: #322F29;
+  color: #322f29;
   font-family: NanumSquareRound;
   font-size: 26px;
   font-style: normal;
